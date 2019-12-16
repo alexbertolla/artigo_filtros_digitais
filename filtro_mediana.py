@@ -6,7 +6,7 @@ from PIL import Image
 
 from matplotlib import pyplot as plt
 
-from programa import add_ruido_gaussiano
+from add_ruido_gaussiano import add_ruido_gaussiano
 
 #pylab.figure(figsize=(20, 35))
 
@@ -20,7 +20,7 @@ pil_img = Image.fromarray(pix)
 #plt.axis("off")
 #plt.imshow(im)
 
-ruidos_gaussiano = add_ruido_gaussiano.add_ruido_gaussiano(pix)
+ruidos_gaussiano = add_ruido_gaussiano(pix)
 #pil_img_g = Image.fromarray(ruidos_gaussiano)
 #ruidos_sp = add_ruido_sal_e_pimenta.add_ruido_sal_e_pimenta(pix)
 #pil_img_sp = Image.fromarray(ruidos_sp)

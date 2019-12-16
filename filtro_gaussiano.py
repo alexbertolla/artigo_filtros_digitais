@@ -2,7 +2,8 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
 
-from programa import add_ruido_gaussiano, add_ruido_sal_e_pimenta
+from add_ruido_gaussiano import add_ruido_gaussiano
+from add_ruido_sal_e_pimenta import add_ruido_sal_e_pimenta
 
 nome_imagem_original = "imagem_original.jpg"
 imagem_original = cv.imread(nome_imagem_original, 0)
@@ -18,7 +19,7 @@ plt.axis("off")
 plt.imshow(imagem_original, cmap='gray')
 
 
-ruidos_gaussiano = add_ruido_gaussiano.add_ruido_gaussiano(imagem_original)
+ruidos_gaussiano = add_ruido_gaussiano(imagem_original)
 
 plt.figure()
 plt.axis("off")
@@ -46,7 +47,7 @@ plt.imshow(median_blur_for_gaussian, cmap='gray')
 #plt.imsave('imagem_ruido_gaussiano.jpg', ruidos_gaussiano)
 
 
-ruidos_sp = add_ruido_sal_e_pimenta.add_ruido_sal_e_pimenta(imagem_original)
+ruidos_sp = add_ruido_sal_e_pimenta(imagem_original)
 plt.imsave('imagem_ruido_sal_pimenta.jpg', ruidos_sp)
 
 #cv.imwrite('imagem_ruido_sal_pimenta.jpg', cv.cvtColor(ruidos_sp, cv.COLOR_BGR2RGB))

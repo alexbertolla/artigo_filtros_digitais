@@ -1,7 +1,8 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
 
-from programa import add_ruido_gaussiano
+from add_ruido_gaussiano import add_ruido_gaussiano
+
 
 imagem_original = cv.imread('imagem_original.jpg')
 imagem_original = cv.cvtColor(imagem_original, cv.COLOR_BGR2RGB)
@@ -19,7 +20,7 @@ plt.axis('off')
 #plt.axis('off')
 
 
-imagem_ruido_gaussiano = add_ruido_gaussiano.add_ruido_gaussiano(imagem_original)
+imagem_ruido_gaussiano = add_ruido_gaussiano(imagem_original)
 plt.imsave('imagem_ruido_gaussiano.jpg', imagem_ruido_gaussiano)
 imagem_ruido_gaussiano = cv.imread('imagem_ruido_gaussiano.jpg')
 imagem_ruido_gaussiano = cv.cvtColor(imagem_ruido_gaussiano, cv.COLOR_BGR2RGB)
