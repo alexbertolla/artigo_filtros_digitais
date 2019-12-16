@@ -45,11 +45,18 @@ ssim_imagem_filtro_wiener_ruido_gaussiano = ssim(imagem_original, imagem_filtro_
 ssim_imagem_filtro_wiener_ruido_sal_e_pimenta = ssim(imagem_original, imagem_filtro_wiener_ruido_sal_e_pimenta)
 
 print('ssim_imagem_filtro_gaussiano_ruido_gaussiano: ', ssim_imagem_filtro_gaussiano_ruido_gaussiano)
-print('ssim_imagem_filtro_gaussiano_ruido_sal_e_pimenta: ', ssim_imagem_filtro_gaussiano_ruido_sal_e_pimenta)
 print('ssim_imagem_filtro_mediana_ruido_gaussiano: ', ssim_imagem_filtro_mediana_ruido_gaussiano)
-print('ssim_imagem_filtro_mediana_ruido_sal_e_pimenta: ', ssim_imagem_filtro_mediana_ruido_sal_e_pimenta)
 print('ssim_imagem_filtro_wiener_ruido_gaussiano: ', ssim_imagem_filtro_wiener_ruido_gaussiano)
+
+print()
+
+print('ssim_imagem_filtro_gaussiano_ruido_sal_e_pimenta: ', ssim_imagem_filtro_gaussiano_ruido_sal_e_pimenta)
+print('ssim_imagem_filtro_mediana_ruido_sal_e_pimenta: ', ssim_imagem_filtro_mediana_ruido_sal_e_pimenta)
 print('ssim_imagem_filtro_wiener_ruido_sal_e_pimenta: ', ssim_imagem_filtro_wiener_ruido_sal_e_pimenta)
+
+
+
+
 
 
 

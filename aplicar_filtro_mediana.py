@@ -2,18 +2,19 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 
 from add_ruido_gaussiano import add_ruido_gaussiano
-
+from add_ruido_sal_e_pimenta import add_ruido_sal_e_pimenta
 
 imagem_original = cv.imread('imagem_original.jpg')
 imagem_original = cv.cvtColor(imagem_original, cv.COLOR_BGR2RGB)
-plt.figure()
-plt.title('imagem_original')
-plt.imshow(imagem_original)
-plt.axis('off')
+print(imagem_original)
+#plt.figure()
+#plt.title('imagem_original')
+#plt.imshow(imagem_original)
+#plt.axis('off')
 
-#imagem_ruido_sal_e_pimenta = add_ruido_sal_e_pimenta(imagem_original)
+imagem_ruido_sal_e_pimenta = add_ruido_sal_e_pimenta(imagem_original)
 #imagem_ruido_sal_e_pimenta = cv.cvtColor(imagem_ruido_sal_e_pimenta, cv.COLOR_GRAY2RGB)
-#plt.imsave('imagem_ruido_sal_e_pimenta.jpg', imagem_ruido_sal_e_pimenta)
+plt.imsave('imagem_ruido_sal_e_pimenta.jpg', imagem_ruido_sal_e_pimenta)
 #plt.figure()
 #plt.title('imagem_ruido_sal_e_pimenta')
 #plt.imshow(imagem_ruido_sal_e_pimenta)
@@ -24,16 +25,16 @@ imagem_ruido_gaussiano = add_ruido_gaussiano(imagem_original)
 plt.imsave('imagem_ruido_gaussiano.jpg', imagem_ruido_gaussiano)
 imagem_ruido_gaussiano = cv.imread('imagem_ruido_gaussiano.jpg')
 imagem_ruido_gaussiano = cv.cvtColor(imagem_ruido_gaussiano, cv.COLOR_BGR2RGB)
-#plt.imsave('imagem_ruido_gaussiano.jpg', imagem_ruido_gaussiano)
-plt.figure()
-plt.title('imagem_ruido_gaussiano')
-plt.imshow(imagem_ruido_gaussiano)
-plt.axis('off')
+plt.imsave('imagem_ruido_gaussiano.jpg', imagem_ruido_gaussiano)
+#plt.figure()
+#plt.title('imagem_ruido_gaussiano')
+#plt.imshow(imagem_ruido_gaussiano)
+#plt.axis('off')
 
 
 ############################## FILTRO MEDIANA ###################################
-#imagem_filtro_mediana_sp = cv.medianBlur(imagem_ruido_sal_e_pimenta, 3)
-#plt.imsave('imagem_filtro_mediana_ruido_sal_e_pimenta.jpg', imagem_filtro_mediana_sp)
+imagem_filtro_mediana_sp = cv.medianBlur(imagem_ruido_sal_e_pimenta, 3)
+plt.imsave('imagem_filtro_mediana_ruido_sal_e_pimenta.jpg', imagem_filtro_mediana_sp)
 #plt.figure()
 #plt.title('filtro mediana ruido sal e pimenta')
 #plt.imshow(imagem_filtro_mediana_sp)
@@ -41,15 +42,15 @@ plt.axis('off')
 
 imagem_filtro_mediana_ruido_gaussiano = cv.medianBlur(imagem_ruido_gaussiano, 3)
 plt.imsave('imagem_filtro_mediana_ruido_gaussiano.jpg', imagem_filtro_mediana_ruido_gaussiano)
-plt.figure()
-plt.title('filtro mediana ruido gaussiano')
-plt.imshow(imagem_filtro_mediana_ruido_gaussiano)
-plt.axis('off')
+#plt.figure()
+#plt.title('filtro mediana ruido gaussiano')
+#plt.imshow(imagem_filtro_mediana_ruido_gaussiano)
+#plt.axis('off')
 ############################## FIM FILTRO MEDIANA ###################################
 
 ############################## FILTRO GAUSSIANO ###################################
-#imagem_filtro_gaussiano_ruido_sal_e_pimenta = cv.GaussianBlur(imagem_ruido_sal_e_pimenta, (3, 3), 1)
-#plt.imsave('imagem_filtro_gaussiano_ruido_sal_e_pimenta.jpg', imagem_filtro_gaussiano_ruido_sal_e_pimenta)
+imagem_filtro_gaussiano_ruido_sal_e_pimenta = cv.GaussianBlur(imagem_ruido_sal_e_pimenta, (3, 3), 1)
+plt.imsave('imagem_filtro_gaussiano_ruido_sal_e_pimenta.jpg', imagem_filtro_gaussiano_ruido_sal_e_pimenta)
 #plt.figure()
 #plt.title('filtro gaussiano ruido sal e pimenta')
 #plt.imshow(imagem_filtro_gaussiano_ruido_sal_e_pimenta)
@@ -58,9 +59,9 @@ plt.axis('off')
 imagem_filtro_gaussiano_ruido_gaussiano = cv.GaussianBlur(imagem_ruido_gaussiano, (3, 3), 1)
 plt.imsave('imagem_filtro_gaussiano_ruido_gaussiano.jpg', imagem_filtro_gaussiano_ruido_gaussiano)
 plt.figure()
-plt.title('filtro gaussiano ruido gaussiano')
-plt.imshow(imagem_filtro_gaussiano_ruido_gaussiano)
-plt.axis('off')
+#plt.title('filtro gaussiano ruido gaussiano')
+#plt.imshow(imagem_filtro_gaussiano_ruido_gaussiano)
+#plt.axis('off')
 ############################## FIM FILTRO GAUSSIANO ###################################
 
 
@@ -75,4 +76,4 @@ plt.axis('off')
 
 
 
-plt.show()
+#plt.show()
