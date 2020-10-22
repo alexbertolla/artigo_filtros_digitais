@@ -1,45 +1,43 @@
-import numpy as np
-from PIL import ImageFilter as imfilter
-from PIL import Image
-
-#from skimage import color, viewer, exposure, img_as_float, data
-
+from skimage import img_as_float, img_as_ubyte
+from skimage.io import imread, imsave
+from skimage import color
+from skimage.filters import median
+from skimage.morphology import disk
 from matplotlib import pyplot as plt
 
-from add_ruido_gaussiano import add_ruido_gaussiano
+imagem_original = imread('imagem_lena.png', as_gray=True)
+imagem_ruidosa = imread('imagem_ruidosa.jpg', as_gray=True)
+#imagem_ruidosa = imread('imagem_ruidosa.jpg', as_gray=False)
 
-#pylab.figure(figsize=(20, 35))
+imagem_original = img_as_float(imagem_original)
+imagem_ruidosa = img_as_float(imagem_ruidosa)
 
-im = Image.open("imagem_original.jpg")
-#print(im)
-pix = np.array(im)
-#print(pix)
-pil_img = Image.fromarray(pix)
-#print(pil_img)
-#plt.figure()
-#plt.axis("off")
-#plt.imshow(im)
+if len(imagem_ruidosa.shape) == 3:
+    linha, coluna, _ = imagem_ruidosa.shape
+else:
+    linha, coluna = imagem_ruidosa.shape
 
-ruidos_gaussiano = add_ruido_gaussiano(pix)
-#pil_img_g = Image.fromarray(ruidos_gaussiano)
-#ruidos_sp = add_ruido_sal_e_pimenta.add_ruido_sal_e_pimenta(pix)
-#pil_img_sp = Image.fromarray(ruidos_sp)
+janela = 3
+imagem_filtrada = median(imagem_ruidosa, disk(janela), mode='constant', cval=0.0)
+imagem_filtrada = img_as_ubyte(imagem_filtrada)
 
-plt.figure()
-plt.axis("off")
-plt.imshow(ruidos_gaussiano)
-print(ruidos_gaussiano)
+imagem_original_filtrada = median(imagem_original, disk(janela), mode='constant', cval=0.0)
+imagem_original_filtrada = img_as_ubyte(imagem_original_filtrada)
 
-#plt.figure()
-#plt.axis("off")
-#plt.imshow(ruidos_sp)
+imsave('imagem_original_filtro_mediana.jpg', imagem_original_filtrada)
+imsave('imagem_ruidosa_filtro_mediana.jpg', imagem_filtrada)
 
-im1 = im.filter(imfilter.MedianFilter(size=3))
+plt.figure(figsize=(10, 10))
+plt.subplot(2, 2, 1)
+plt.title('Imagem Ruidosa')
+plt.imshow(imagem_ruidosa, cmap='gray')
 
-#plt.figure()
-#plt.axis("off")
-#plt.imshow(im1)
+plt.subplot(2, 2, 2)
+plt.title('Imagem Filtrada')
+plt.imshow(imagem_filtrada, cmap='gray')
+
+
 
 plt.show()
+print('FIM FILTRO MEDIANA')
 
-print('FIM')
