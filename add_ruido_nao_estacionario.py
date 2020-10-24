@@ -5,6 +5,7 @@ from skimage import color
 from matplotlib import pyplot as plt
 import random
 from skimage.util import random_noise
+import os
 
 def add_ruido_gaussiano(imagem_original):
     sigma = 0.05
@@ -43,46 +44,27 @@ def add_ruido_spekle(imagem_original):
     imagem_ruido_spekle = img_as_float(imagem_ruido_spekle)
     return imagem_ruido_spekle
 
-lagarta = 'imagem_original.jpg'
-lena = 'imagem_lena.png'
+dir_imagens_originais = 'imagens_originais'
+dir_imagens_ruido_nao_estacionario = 'imagens_ruido_nao_estacionario'
 
-imagem_original = imread(lena, as_gray=True)
-#imagem_original = imread(lagarta, as_gray=False)
-imagem_original = img_as_float(imagem_original)
-
-if len(imagem_original.shape) == 3:
-    linha, coluna, _ = imagem_original.shape
-else:
-    linha, coluna = imagem_original.shape
-
-imagem_ruidosa = np.copy(imagem_original)
-imagem_ruidosa[:int(linha/2), :int(coluna/2)] = add_ruido_spekle(imagem_original[:int(linha/2), :int(coluna/2)])
-imagem_ruidosa[:int(linha/2), int(coluna/2):] = add_ruido_sal_e_pimenta(imagem_original[:int(linha/2), int(coluna/2):])
-imagem_ruidosa[int(linha/2):, :int(coluna/2)] = add_ruido_gaussiano(imagem_original[int(linha/2):, :int(coluna/2)])
-#imagem_ruidosa[int(linha/2):, int(coluna/2):] = imagem_rgb[int(linha/2):, int(coluna/2):]
-
-imagem_ruidosa = img_as_ubyte(imagem_ruidosa)
-imsave('imagem_ruidosa.jpg', imagem_ruidosa)
+lista_imagens_originais = os.listdir(dir_imagens_originais)
+for nome_imagem in lista_imagens_originais:
+    imagem_original = imread(dir_imagens_originais +'/'+ nome_imagem, as_gray=True)
 
 
-plt.figure(figsize=(10, 10))
-plt.subplot(2, 2, 1)
-plt.title('Imagem Original')
-plt.imshow(imagem_original, cmap='gray')
+    if len(imagem_original.shape) == 3:
+        linha, coluna, _ = imagem_original.shape
+    else:
+        linha, coluna = imagem_original.shape
 
-plt.subplot(2, 2, 2)
-plt.title('Imagem Ruidosa')
-plt.imshow(imagem_ruidosa, cmap='gray')
+    imagem_ruidosa = np.copy(imagem_original)
+    imagem_ruidosa[:int(linha/2), :int(coluna/2)] = add_ruido_spekle(imagem_original[:int(linha/2), :int(coluna/2)])
+    imagem_ruidosa[:int(linha/2), int(coluna/2):] = add_ruido_sal_e_pimenta(imagem_original[:int(linha/2), int(coluna/2):])
+    imagem_ruidosa[int(linha/2):, :int(coluna/2)] = add_ruido_gaussiano(imagem_original[int(linha/2):, :int(coluna/2)])
 
-plt.subplot(2, 2, 3)
-plt.title('Histograma Imagem Original')
-plt.hist(imagem_original.flat, bins=256, range=(0, 1), color='black')
-
-plt.subplot(2, 2, 4)
-plt.title('Histograma Imagem Ruidosa')
-plt.hist(imagem_ruidosa.flat, bins=256, range=(0, 1), color='black')
-
-plt.show()
+    imagem_ruidosa = img_as_ubyte(imagem_ruidosa)
+    imsave(dir_imagens_ruido_nao_estacionario + '/' + nome_imagem, imagem_ruidosa)
+    print(dir_imagens_ruido_nao_estacionario + '/' + nome_imagem)
 
 
-print('FIM')
+print('FIM ADD RUIDO NAO ESTACIONARIO')

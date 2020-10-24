@@ -1,27 +1,37 @@
-import cv2 as cv
 import numpy as np
-from matplotlib import pyplot as plt
 import random
-nome_imagem_original = "imagem_original.jpg"
+from skimage import img_as_float, img_as_ubyte
+from skimage.io import imread, imsave
+import os
 
 
-################### FUNÇÃO ADD RUIDO #######################
-def add_ruido_sal_e_pimenta(image):
-    '''
-    Add salt and pepper noise to image
-    prob: Probability of the noise
-    '''
+def add_ruido_sal_e_pimenta(imagem_original):
     prob = 0.05
-    output = np.zeros(image.shape, np.uint8)
+    imagem_ruidosa = np.zeros(imagem_original.shape)
     thres = 1 - prob
 
-    for i in range(image.shape[0]):
-        for j in range(image.shape[1]):
+    for i in range(imagem_original.shape[0]):
+        for j in range(imagem_original.shape[1]):
             rdn = random.random()
             if rdn < prob:
-                output[i][j] = 0
+                imagem_ruidosa[i][j] = 0
             elif rdn > thres:
-                output[i][j] = 255
+                imagem_ruidosa[i][j] = 1
             else:
-                output[i][j] = image[i][j]
-    return output
+                imagem_ruidosa[i][j] = imagem_original[i][j]
+    return imagem_ruidosa
+
+
+dir_imagens_originais = 'imagens_originais'
+dir_imagens_ruido_sal_e_pimenta = 'imagens_ruido_sal_e_pimenta'
+
+lista_imagens_originais = os.listdir(dir_imagens_originais)
+for nome_imagem in lista_imagens_originais:
+    imagem_original = imread(dir_imagens_originais +'/'+ nome_imagem, as_gray=True)
+    imagem_ruido_sal_e_pimenta = add_ruido_sal_e_pimenta(imagem_original)
+    imagem_ruido_sal_e_pimenta = img_as_ubyte(imagem_ruido_sal_e_pimenta)
+    imsave(dir_imagens_ruido_sal_e_pimenta +'/'+ nome_imagem, imagem_ruido_sal_e_pimenta)
+    print(dir_imagens_ruido_sal_e_pimenta + '/' + nome_imagem)
+
+
+print('FIM ADD RUIDO SAL E PIMENTA')

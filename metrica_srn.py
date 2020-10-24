@@ -1,152 +1,52 @@
-import numpy as np
-import numpy as np
-import matplotlib.pyplot as plt
+from skimage import img_as_ubyte, img_as_float
+from skimage.io import imread
+from skimage.metrics import peak_signal_noise_ratio, structural_similarity, mean_squared_error
+from sporco.metric import snr
+from matplotlib import pylab
 
-from skimage import data, img_as_float, color
-from skimage.metrics import structural_similarity as ssim
-from skimage.io import imread, imsave, imshow
-import cv2 as cv
+def calcular_snr(imagem_original, imagem_ruidosa):
+    return snr(imagem_original, imagem_ruidosa)
 
+def calcular_mse(imagem_original, imagem_ruidosa):
+    return mean_squared_error(imagem_original, imagem_ruidosa)
 
+lena = 'imagem_lena.png'
 
-def mse(vref, vcmp):
-    """
-    Compute Mean Squared Error (MSE) between two images.
+imagem_original = imread(lena, as_gray=True)
+imagem_ruido_gaussiano = imread('imagem_ruido_gaussiano.jpg', as_gray=True)
+imagem_ruido_spekle = imread('imagem_ruido_spekle.jpg', as_gray=True)
+imagem_ruido_sal_e_pimenta = imread('imagem_ruido_sal_e_pimenta.jpg', as_gray=True)
 
-    Parameters
-    ----------
-    vref : array_like
-      Reference image
-    vcmp : array_like
-      Comparison image
+snr_ruido_gaussiano = calcular_snr(imagem_original, imagem_ruido_gaussiano)
+snr_ruido_spekle = calcular_snr(imagem_original, imagem_ruido_spekle)
+snr_ruido_sal_e_pimenta = calcular_snr(imagem_original, imagem_ruido_sal_e_pimenta)
 
-    Returns
-    -------
-    x : float
-      MSE between `vref` and `vcmp`
-    """
-
-    r = np.asarray(vref, dtype=np.float32).ravel()
-    c = np.asarray(vcmp, dtype=np.float32).ravel()
-    return np.mean(np.abs(r - c)**2)
+print('SNR RUÍDO GAUSSIANO = ', snr_ruido_gaussiano)
+print('SNR RUÍDO SPEKLE = ', snr_ruido_spekle)
+print('SNR RUÍDO SAL E PIMENTA = ', snr_ruido_sal_e_pimenta)
 
 
 
+mse_ruido_gaussiano = calcular_mse(imagem_original, imagem_ruido_gaussiano)
+mse_ruido_spekle = calcular_mse(imagem_original, imagem_ruido_spekle)
+mse_ruido_sal_e_pimenta = calcular_mse(imagem_original, imagem_ruido_sal_e_pimenta)
 
-def snr(vref, vcmp):
-    """
-    Compute Signal to Noise Ratio (SNR) of two images.
+print('SNR RUÍDO GAUSSIANO = ', snr_ruido_gaussiano)
+print('SNR RUÍDO SPEKLE = ', snr_ruido_spekle)
+print('SNR RUÍDO SAL E PIMENTA = ', snr_ruido_sal_e_pimenta)
 
-    Parameters
-    ----------
-    vref : array_like
-      Reference image
-    vcmp : array_like
-      Comparison image
-
-    Returns
-    -------
-    x : float
-      SNR of `vcmp` with respect to `vref`
-    """
-
-    dv = np.var(vref)
-    with np.errstate(divide='ignore'):
-        rt = dv / mse(vref, vcmp)
-    return 10.0 * np.log10(rt)
-
-
-imagem_original = cv.imread('imagem_original.jpg')
-imagem_original = cv.cvtColor(imagem_original, cv.COLOR_BGR2GRAY)
-imagem_original2 = cv.imread('imagem_original.jpg')
-
-
-imagem_ruido_gaussiano = cv.imread('imagem_ruido_gaussiano.jpg')
-imagem_ruido_sal_e_pimenta = cv.imread('imagem_ruido_sal_e_pimenta.jpg')
-imagem_ruido_gaussiano = cv.cvtColor(imagem_ruido_gaussiano, cv.COLOR_BGR2GRAY)
-imagem_ruido_sal_e_pimenta = cv.cvtColor(imagem_ruido_sal_e_pimenta, cv.COLOR_BGR2GRAY)
-
-imagem_filtro_gaussiano_ruido_gaussiano = cv.imread('imagem_filtro_gaussiano_ruido_gaussiano.jpg')
-imagem_filtro_gaussiano_ruido_sal_e_pimenta = cv.imread('imagem_filtro_gaussiano_ruido_sal_e_pimenta.jpg')
-imagem_filtro_gaussiano_ruido_gaussiano = cv.cvtColor(imagem_filtro_gaussiano_ruido_gaussiano, cv.COLOR_BGR2GRAY)
-imagem_filtro_gaussiano_ruido_sal_e_pimenta = cv.cvtColor(imagem_filtro_gaussiano_ruido_sal_e_pimenta, cv.COLOR_BGR2GRAY)
-
-imagem_filtro_mediana_ruido_gaussiano = cv.imread('imagem_filtro_mediana_ruido_gaussiano.jpg')
-imagem_filtro_mediana_ruido_sal_e_pimenta = cv.imread('imagem_filtro_mediana_ruido_sal_e_pimenta.jpg')
-imagem_filtro_mediana_ruido_gaussiano = cv.cvtColor(imagem_filtro_mediana_ruido_gaussiano, cv.COLOR_BGR2GRAY)
-imagem_filtro_mediana_ruido_sal_e_pimenta = cv.cvtColor(imagem_filtro_mediana_ruido_sal_e_pimenta, cv.COLOR_BGR2GRAY)
-
-imagem_filtro_wiener_ruido_gaussiano = cv.imread('imagem_filtro_wiener_ruido_gaussiano.jpg')
-imagem_filtro_wiener_ruido_sal_e_pimenta = cv.imread('imagem_filtro_wiener_ruido_sal_e_pimenta.jpg')
-
-imagem_filtro_wiener_ruido_gaussiano = cv.cvtColor(imagem_filtro_wiener_ruido_gaussiano, cv.COLOR_BGR2GRAY)
-imagem_filtro_wiener_ruido_sal_e_pimenta = cv.cvtColor(imagem_filtro_wiener_ruido_sal_e_pimenta, cv.COLOR_BGR2GRAY)
-
-snr_imagem_ruido_gaussiano = snr(imagem_original, imagem_ruido_gaussiano)
-snr_imagem_ruido_sal_e_pimenta = snr(imagem_original, imagem_ruido_sal_e_pimenta)
-
-snr_imagem_filtro_gaussiano_ruido_gaussiano = snr(imagem_original, imagem_filtro_gaussiano_ruido_gaussiano)
-snr_imagem_filtro_gaussiano_ruido_sal_e_pimenta = snr(imagem_original, imagem_filtro_gaussiano_ruido_sal_e_pimenta)
-
-snr_imagem_filtro_mediana_ruido_gaussiano = snr(imagem_original, imagem_filtro_mediana_ruido_gaussiano)
-snr_imagem_filtro_mediana_ruido_sal_e_pimenta = snr(imagem_original, imagem_filtro_mediana_ruido_sal_e_pimenta)
-
-snr_imagem_filtro_wiener_ruido_gaussiano = snr(imagem_original, imagem_filtro_wiener_ruido_gaussiano)
-snr_imagem_filtro_wiener_ruido_sal_e_pimenta = snr(imagem_original, imagem_filtro_wiener_ruido_sal_e_pimenta)
-
-snr_imagem_original = snr(imagem_original, imagem_original)
-
-array_metricas = (
-    ['snr_imagem_filtro_gaussiano_ruido_gaussiano', snr_imagem_filtro_gaussiano_ruido_gaussiano],
-    ['snr_imagem_filtro_mediana_ruido_gaussiano', snr_imagem_filtro_mediana_ruido_gaussiano],
-    ['snr_imagem_filtro_wiener_ruido_gaussiano', snr_imagem_filtro_wiener_ruido_gaussiano],
-    ['snr_imagem_filtro_gaussiano_ruido_sal_e_pimenta', snr_imagem_filtro_gaussiano_ruido_gaussiano],
-    ['snr_imagem_filtro_mediana_ruido_sal_e_pimenta', snr_imagem_filtro_gaussiano_ruido_gaussiano],
-    ['snr_imagem_filtro_wiener_ruido_sal_e_pimenta', snr_imagem_filtro_gaussiano_ruido_gaussiano],
-)
-
-#print(array_metricas)
-print('snr_imagem_ruido_gaussiano = ', snr_imagem_ruido_gaussiano)
-print('snr_imagem_ruido_sal_e_pimenta = ', snr_imagem_ruido_sal_e_pimenta)
-
-print()
-
-print('snr_imagem_filtro_gaussiano_ruido_gaussiano = ', snr_imagem_filtro_gaussiano_ruido_gaussiano)
-print('snr_imagem_filtro_mediana_ruido_gaussiano = ', snr_imagem_filtro_mediana_ruido_gaussiano)
-print('snr_imagem_filtro_wiener_ruido_gaussiano = ', snr_imagem_filtro_wiener_ruido_gaussiano)
-
-print()
-
-print('snr_imagem_filtro_gaussiano_ruido_sal_e_pimenta = ', snr_imagem_filtro_gaussiano_ruido_sal_e_pimenta)
-print('snr_imagem_filtro_mediana_ruido_sal_e_pimenta = ', snr_imagem_filtro_mediana_ruido_sal_e_pimenta)
-print('snr_imagem_filtro_wiener_ruido_sal_e_pimenta = ', snr_imagem_filtro_wiener_ruido_sal_e_pimenta)
-
-print(snr_imagem_filtro_gaussiano_ruido_gaussiano - snr_imagem_filtro_gaussiano_ruido_sal_e_pimenta)
-print(snr_imagem_filtro_mediana_ruido_gaussiano - snr_imagem_filtro_mediana_ruido_sal_e_pimenta)
-print(snr_imagem_filtro_wiener_ruido_gaussiano - snr_imagem_filtro_wiener_ruido_sal_e_pimenta)
+print('MSE RUÍDO GAUSSIANO = ', mse_ruido_gaussiano)
+print('MSE RUÍDO SPEKLE = ', mse_ruido_spekle)
+print('MSE RUÍDO SAL E PIMENTA = ', mse_ruido_sal_e_pimenta)
 
 
 
+pylab.figure()
+pylab.subplot(1, 4, 1), pylab.imshow(imagem_original, cmap='gray')
+pylab.subplot(1, 4, 2), pylab.imshow(imagem_ruido_gaussiano, cmap='gray')
+pylab.subplot(1, 4, 3), pylab.imshow(imagem_ruido_spekle, cmap='gray')
+pylab.subplot(1, 4, 4), pylab.imshow(imagem_ruido_sal_e_pimenta, cmap='gray')
 
-fig, axes = plt.subplots(nrows=3, ncols=4, figsize=(15, 4), sharex=True, sharey=True)
-plt.gray()
-plt.axis('off')
-axes[0][0].imshow(imagem_original), axes[0][0].axis('off'), axes[0][0].set_xlabel('original image')
+pylab.show()
 
-axes[1][0].imshow(imagem_ruido_gaussiano), axes[1][0].axis('off'), axes[1][0].set_xlabel('original image')
-axes[1][1].imshow(imagem_filtro_gaussiano_ruido_gaussiano), axes[1][1].axis('on'), axes[1][1].set_xlabel('imagem_filtro_gaussiano_ruido_gaussiano')
-axes[1][2].imshow(imagem_filtro_mediana_ruido_gaussiano), axes[1][2].axis('on'), axes[1][2].set_xlabel('imagem_filtro_mediana_ruido_gaussiano')
-axes[1][3].imshow(imagem_filtro_wiener_ruido_gaussiano), axes[1][3].axis('on'), axes[1][3].set_xlabel('imagem_filtro_wiener_ruido_gaussiano')
-
-axes[2][0].imshow(imagem_ruido_sal_e_pimenta), axes[2][0].axis('off'), axes[2][0].set_xlabel('original image')
-axes[2][1].imshow(imagem_filtro_gaussiano_ruido_sal_e_pimenta), axes[2][1].axis('on'), axes[2][1].set_xlabel('imagem_filtro_gaussiano_ruido_sal_e_pimenta')
-axes[2][2].imshow(imagem_filtro_mediana_ruido_sal_e_pimenta), axes[2][2].axis('on'), axes[2][2].set_xlabel('imagem_filtro_mediana_ruido_sal_e_pimenta')
-axes[2][3].imshow(imagem_filtro_wiener_ruido_sal_e_pimenta), axes[2][3].axis('on'), axes[2][3].set_xlabel('imagem_filtro_wiener_ruido_sal_e_pimenta')
-
-
-plt.show()
-
-#cv.imshow('1', imagem_filtro_wiener_ruido_gaussiano)
-#cv.imshow('2', imagem_filtro_wiener_ruido_sal_e_pimenta)
-
-#cv.waitKey()
+print('FIM METRICAS')
