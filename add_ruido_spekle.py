@@ -3,9 +3,9 @@ from skimage import img_as_float, img_as_ubyte
 from skimage.io import imread, imsave
 import os
 
-def add_ruido_spekle(imagem_original):
+def add_ruido_spekle(imagem_original, sigma):
     imagem_ruidosa = np.copy(imagem_original)
-    gauss = np.random.normal(0, 0.7, imagem_original.size)
+    gauss = np.random.normal(0, sigma, imagem_original.size)
 
     if len(imagem_original.shape) == 3:
         gauss = gauss.reshape(imagem_original.shape[0], imagem_original.shape[1], imagem_original.shape[2]).astype('uint8')
@@ -22,9 +22,15 @@ dir_imagens_ruido_spekle = 'imagens_ruido_spekle'
 lista_imagens_originais = os.listdir(dir_imagens_originais)
 for nome_imagem in lista_imagens_originais:
     imagem_original = imread(dir_imagens_originais +'/'+ nome_imagem, as_gray=True)
-    imagem_ruido_spekle = add_ruido_spekle(imagem_original)
-    imagem_ruido_spekle = img_as_ubyte(imagem_ruido_spekle)
-    imsave(dir_imagens_ruido_spekle +'/'+ nome_imagem, imagem_ruido_spekle)
+    imagem_ruidosa = np.copy(imagem_original)
+
+    linha, coluna = imagem_original.shape
+
+    imagem_ruidosa[:int(linha / 2), :int(coluna / 2)] = add_ruido_spekle(imagem_original[:int(linha / 2), :int(coluna / 2)], 0.7)
+    imagem_ruidosa[:int(linha / 2), int(coluna / 2):] = add_ruido_spekle(imagem_original[:int(linha / 2), int(coluna / 2):], 1.0)
+    imagem_ruidosa[int(linha / 2):, :int(coluna / 2)] = add_ruido_spekle(imagem_original[int(linha / 2):, :int(coluna / 2)], 1.3)
+    imagem_ruidosa = img_as_ubyte(imagem_ruidosa)
+    imsave(dir_imagens_ruido_spekle +'/'+ nome_imagem, imagem_ruidosa)
     print(dir_imagens_ruido_spekle + '/' + nome_imagem)
 
 

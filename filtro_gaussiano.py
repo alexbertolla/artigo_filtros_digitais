@@ -18,7 +18,7 @@ for nome_imagem in lista_imagens_ruido_gaussiano:
     imagem_ruido_spekle = imread(dir_imagens_ruido_spekle + '/' + nome_imagem, as_gray=True)
     imagem_ruido_sal_e_pimenta = imread(dir_imagens_ruido_sal_e_pimenta + '/' + nome_imagem, as_gray=True)
 
-    sigma = 3
+    sigma = 1.5
     imagem_ruido_gaussiano_filtrada = gaussian(imagem_ruido_gaussiano, sigma=sigma, multichannel=False, mode='constant', cval=0)
     imagem_ruido_spekle_filtrada = gaussian(imagem_ruido_spekle, sigma=sigma, multichannel=False, mode='constant', cval=0)
     imagem_ruido_sal_e_pimenta_filtrada = gaussian(imagem_ruido_sal_e_pimenta, sigma=sigma, multichannel=False, mode='constant', cval=0)
