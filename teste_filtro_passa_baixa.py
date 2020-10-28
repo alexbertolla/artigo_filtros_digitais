@@ -7,7 +7,7 @@ import os
 from scipy import fftpack
 
 
-dir_imagens_originais = './imagens_originais/'
+dir_imagens_originais = './imagens_ruido_gaussiano/'
 lista_imagens_ruido_gaussiano = os.listdir(dir_imagens_originais)
 
 for nome_imagem in lista_imagens_ruido_gaussiano:

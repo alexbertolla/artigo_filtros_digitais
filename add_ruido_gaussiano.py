@@ -3,6 +3,7 @@ from skimage.io import imread, imsave
 from skimage.util import random_noise
 import os
 import numpy as np
+from matplotlib import pylab
 
 
 def add_ruido_gaussiano(imagem_original, sigma):
@@ -24,8 +25,18 @@ for nome_imagem in lista_imagens_originais:
     imagem_ruidosa[:int(linha / 2), :int(coluna / 2)] = add_ruido_gaussiano(imagem_original[:int(linha/2), :int(coluna/2)], 0.05)
     imagem_ruidosa[:int(linha / 2), int(coluna / 2):] = add_ruido_gaussiano(imagem_original[:int(linha/2), int(coluna/2):], 0.10)
     imagem_ruidosa[int(linha / 2):, :int(coluna / 2)] = add_ruido_gaussiano(imagem_original[int(linha/2):, :int(coluna/2)], 0.15)
+    imagem_ruidosa[int(linha / 2):, int(coluna / 2):] = add_ruido_gaussiano(imagem_original[int(linha/2):, int(coluna/2):], 0.00)
     imagem_ruidosa = img_as_ubyte(imagem_ruidosa)
-    imsave(dir_imagens_ruido_gaussiano + '/' + nome_imagem, imagem_ruidosa)
+    #imsave(dir_imagens_ruido_gaussiano + '/' + nome_imagem, imagem_ruidosa)
+
+    pylab.figure()
+    pylab.subplot(1, 2, 1)
+    pylab.axis('off')
+    pylab.imshow(imagem_original, cmap='gray')
+    pylab.subplot(1, 2, 2)
+    pylab.axis('off')
+    pylab.imshow(imagem_ruidosa , cmap='gray')
+    pylab.show()
 
     print(dir_imagens_ruido_gaussiano +'/'+ nome_imagem)
 

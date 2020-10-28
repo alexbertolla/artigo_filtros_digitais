@@ -7,7 +7,7 @@ import os
 from scipy import fftpack
 from skimage.metrics import peak_signal_noise_ratio as psnr
 
-dir_imagens_originais = './imagens_originais/'
+dir_imagens_originais = './imagens_ruido_gaussiano/'
 
 lista_imagens_ruido_gaussiano = os.listdir(dir_imagens_originais)
 
@@ -19,6 +19,7 @@ for nome_imagem in lista_imagens_ruido_gaussiano:
     discrete_transform = fp.fft2(imagem_original)
     (w, h) = discrete_transform.shape
     half_w, half_h = int(w/2), int(h/2)
+
 
 
 
@@ -52,47 +53,47 @@ for nome_imagem in lista_imagens_ruido_gaussiano:
         pylab.figure()
         pylab.suptitle('Frequência de corte ' + str(l))
 
-        pylab.subplot(3, 3, 1)
+        pylab.subplot(1, 3, 1)
         pylab.axis('off')
         pylab.title('Imagem Original')
         pylab.imshow(imagem_original, cmap='gray')
 
-        pylab.subplot(3, 3, 2)
+        pylab.subplot(1, 3, 2)
         pylab.axis('off')
         pylab.title('Imagem Alta Frequência')
         pylab.imshow(imagem_alta_frequencia, cmap='gray')
 
-        pylab.subplot(3, 3, 3)
+        pylab.subplot(1, 3, 3)
         pylab.axis('off')
         pylab.title('Imagem Filtrada')
         pylab.imshow(imagem_filtrada, cmap='gray')
 
-        pylab.subplot(3, 3, 4)
-        pylab.axis('on')
-        pylab.title('Histograma Imagem Original')
-        pylab.hist(img_as_ubyte(imagem_original.flat), bins=256, range=(0, 255), color='black')
+        #pylab.subplot(3, 3, 4)
+        #pylab.axis('on')
+        #pylab.title('Histograma Imagem Original')
+        #pylab.hist(img_as_ubyte(imagem_original.flat), bins=256, range=(0, 255), color='black')
 
-        pylab.subplot(3, 3, 5)
-        pylab.axis('on')
-        pylab.title('Histograma Alta Frequência')
-        pylab.hist(img_as_ubyte(imagem_alta_frequencia.flat), bins=256, range=(0, 255), color='black')
+        #ylab.subplot(3, 3, 5)
+        #pylab.axis('on')
+        #pylab.title('Histograma Alta Frequência')
+        #pylab.hist(img_as_ubyte(imagem_alta_frequencia.flat), bins=256, range=(0, 255), color='black')
 
-        pylab.subplot(3, 3, 6)
-        pylab.axis('on')
-        pylab.title('Histograma Imagem Filtrada')
-        pylab.hist(imagem_filtrada.flat, bins=256, range=(0, 255), color='black')
+        #pylab.subplot(3, 3, 6)
+        #pylab.axis('on')
+        #pylab.title('Histograma Imagem Filtrada')
+        #pylab.hist(imagem_filtrada.flat, bins=256, range=(0, 255), color='black')
 
 
-        pylab.subplot(3, 3, 7)
-        pylab.axis('off')
-        pylab.title('Spectro Imagem Original')
-        pylab.imshow(spectro_imagem_original, cmap='gray')
+        #pylab.subplot(3, 3, 7)
+        #pylab.axis('off')
+        #pylab.title('Spectro Imagem Original')
+        #pylab.imshow(spectro_imagem_original, cmap='gray')
         #pylab.hist(freq1.flat, bins=256, range=(-10, 10), color='black')
 
-        pylab.subplot(3, 3, 8)
-        pylab.axis('off')
-        pylab.title('Spectro Imagem Alta Frequência')
-        pylab.imshow(spectro_imagem_alta_frequencia, cmap='gray')
+        #pylab.subplot(3, 3, 8)
+        #pylab.axis('off')
+        #pylab.title('Spectro Imagem Alta Frequência')
+        #pylab.imshow(spectro_imagem_alta_frequencia, cmap='gray')
         # pylab.hist(freq1.flat, bins=256, range=(-10, 10), color='black')
 
 
