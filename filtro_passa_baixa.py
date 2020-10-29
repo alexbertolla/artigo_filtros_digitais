@@ -1,6 +1,6 @@
 import numpy as np
 from numpy import fft as fp
-from skimage import img_as_float, img_as_ubyte
+from skimage import img_as_float, img_as_ubyte, img_as_float32
 from skimage.io import imread, imsave
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from scipy import fftpack
@@ -53,16 +53,16 @@ for diretorio in dir_array:
         lista_imagens = os.listdir(diretorio_origem)
         for nome_imagem in lista_imagens:
             imagem_original = img_as_float(imread(diretorio_origem + nome_imagem, as_gray=True))
-            imagem_filtrada = np.zeros(imagem_original.shape)
+            imagem_filtrada = img_as_float(np.zeros(imagem_original.shape))
             #print(imagem_filtrada.shape)
             #exit()
 
             linha, coluna = imagem_original.shape
 
-            quadrante_1 = imagem_original[:int(linha / 2), :int(coluna / 2)]
-            quadrante_2 = imagem_original[:int(linha / 2), int(coluna / 2):]
-            quadrante_3 = imagem_original[int(linha / 2):, :int(coluna / 2)]
-            quadrante_4 = imagem_original[int(linha / 2):, int(coluna / 2):]
+            quadrante_1 = img_as_float(imagem_original[:int(linha / 2), :int(coluna / 2)])
+            quadrante_2 = img_as_float(imagem_original[:int(linha / 2), int(coluna / 2):])
+            quadrante_3 = img_as_float(imagem_original[int(linha / 2):, :int(coluna / 2)])
+            quadrante_4 = img_as_float(imagem_original[int(linha / 2):, int(coluna / 2):])
             discrete_transform_imagem_original = fp.fft2(imagem_original)
             (w_io, h_io) = discrete_transform_imagem_original.shape
             half_w_io, half_h_io = int(w_io / 2), int(h_io / 2)
@@ -101,7 +101,7 @@ for diretorio in dir_array:
             shift_frq_low_q1 = np.copy(shift_frq_q1)
             shift_frq_low_q1[half_w_q1 - corte:half_w_q1 + corte + 1, half_h_q1 - corte:half_h_q1 + corte + 1] = 0
             shift_frq_q1 -= shift_frq_low_q1
-            q1_filtrado = fp.ifft2(fftpack.ifftshift(shift_frq_q1)).real
+            q1_filtrado = img_as_float(fp.ifft2(fftpack.ifftshift(shift_frq_q1)).real)
             valor_psnr = calcular_psnr(quadrante_1, q1_filtrado)
 
 
@@ -109,7 +109,7 @@ for diretorio in dir_array:
             shift_frq_low_q2 = np.copy(shift_frq_q2)
             shift_frq_low_q2[half_w_q2 - corte:half_w_q2 + corte + 1, half_h_q2 - corte:half_h_q2 + corte + 1] = 0
             shift_frq_q2 -= shift_frq_low_q2
-            q2_filtrado = fp.ifft2(fftpack.ifftshift(shift_frq_q2)).real
+            q2_filtrado = img_as_float(fp.ifft2(fftpack.ifftshift(shift_frq_q2)).real)
             valor_psnr = calcular_psnr(quadrante_2, q2_filtrado)
 
 
@@ -117,7 +117,7 @@ for diretorio in dir_array:
             shift_frq_low_q3 = np.copy(shift_frq_q3)
             shift_frq_low_q3[half_w_q3 - corte:half_w_q3 + corte + 1, half_h_q3 - corte:half_h_q3 + corte + 1] = 0
             shift_frq_q3 -= shift_frq_low_q3
-            q3_filtrado = fp.ifft2(fftpack.ifftshift(shift_frq_q3)).real
+            q3_filtrado = img_as_float(fp.ifft2(fftpack.ifftshift(shift_frq_q3)).real)
             valor_psnr = calcular_psnr(quadrante_3, q3_filtrado)
 
 
@@ -125,7 +125,7 @@ for diretorio in dir_array:
             shift_frq_low_q4 = np.copy(shift_frq_q4)
             shift_frq_low_q4[half_w_q4 - corte:half_w_q4 + corte + 1, half_h_q4 - corte:half_h_q4 + corte + 1] = 0
             shift_frq_q4 -= shift_frq_low_q4
-            q4_filtrado = fp.ifft2(fftpack.ifftshift(shift_frq_q4)).real
+            q4_filtrado = img_as_float(fp.ifft2(fftpack.ifftshift(shift_frq_q4)).real)
             valor_psnr = calcular_psnr(quadrante_4, q4_filtrado)
 
             imagem_filtrada[:int(linha / 2), :int(coluna / 2)] = q1_filtrado
@@ -133,18 +133,24 @@ for diretorio in dir_array:
             imagem_filtrada[int(linha / 2):, :int(coluna / 2)] = q3_filtrado
             imagem_filtrada[int(linha / 2):, int(coluna / 2):] = q4_filtrado
 
-            pylab.figure()
-            pylab.suptitle(titulo + str(corte))
-            pylab.subplot(1, 3, 1)
-            pylab.axis('off')
-            pylab.imshow(imagem_original, cmap='gray')
-            pylab.subplot(1, 3, 2)
-            pylab.axis('off')
-            pylab.imshow(imagem_filtrada, cmap='gray')
-            pylab.subplot(1, 3, 3)
-            pylab.axis('off')
-            pylab.imshow(imagem_original_filtrada, cmap='gray')
-            pylab.show()
+            print(diretorio_destino + str(corte) + '/' + nome_imagem)
+
+            #imagem_filtrada = np.array(imagem_filtrada, dtype='uint8')
+
+            imsave(diretorio_destino + str(corte) + '/' + nome_imagem, imagem_filtrada)
+
+            #pylab.figure()
+            #pylab.suptitle(titulo + str(corte))
+            #pylab.subplot(1, 3, 1)
+            #pylab.axis('off')
+            #pylab.imshow(imagem_original, cmap='gray')
+            #pylab.subplot(1, 3, 2)
+            #pylab.axis('off')
+            #pylab.imshow(imagem_filtrada, cmap='gray')
+            #pylab.subplot(1, 3, 3)
+            #pylab.axis('off')
+            #pylab.imshow(imagem_original_filtrada, cmap='gray')
+            #pylab.show()
 
     #exit()
 
