@@ -32,7 +32,7 @@ def criar_diretorios_raizes(dir):
 #shutil.rmtree(dir_destino, ignore_errors=True)
 #os.mkdir(dir_destino)
 
-lista_corte = (30, 35)
+lista_corte = (20, 25, 30, 35)
 
 #dir_array = ([origem, destino, titulo])
 dir_array = (
@@ -48,7 +48,7 @@ for diretorio in dir_array:
     titulo = diretorio[2]
     criar_diretorios_raizes(diretorio_destino)
     for corte in lista_corte:
-        criar_diretorios_raizes(diretorio_destino + str(corte))
+        #criar_diretorios_raizes(diretorio_destino + str(corte))
         print('Trabalhando no diretório ', diretorio_destino + str(corte))
         lista_imagens = os.listdir(diretorio_origem)
         for nome_imagem in lista_imagens:
