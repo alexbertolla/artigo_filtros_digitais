@@ -20,9 +20,9 @@ dir_imagens_orignais = './imagens_originais/'
 dir_metricas = './metricas/'
 dir_array = (
 #    ['./imagens_originais/', './imagens_originais_filtro_passa_baixa/', 'Imagens Originais/'],
-    ['./imagens_ruido_gaussiano/', './imagens_ruido_gaussiano_filtro_passa_baixa/', 'psnr_ruido_gaussiano.txt'],
-    ['./imagens_ruido_sal_e_pimenta/', './imagens_ruido_sal_e_pimenta_filtro_passa_baixa/', 'psnr_ruido_impulsivo.txt'],
-    ['./imagens_ruido_spekle/', './imagens_ruido_spekle_filtro_passa_baixa/', 'psnr_ruido_spekle.txt'],
+    ['./imagens_ruido_gaussiano/', './imagens_ruido_gaussiano_filtro_passa_baixa/', 'psnr_ruido_gaussiano_filtro_passa_baixa.txt'],
+    ['./imagens_ruido_sal_e_pimenta/', './imagens_ruido_sal_e_pimenta_filtro_passa_baixa/', 'psnr_ruido_impulsivo_filtro_passa_baixa.txt'],
+    ['./imagens_ruido_spekle/', './imagens_ruido_spekle_filtro_passa_baixa/', 'psnr_ruido_spekle_filtro_passa_baixa.txt'],
 )
 
 
@@ -38,7 +38,7 @@ for diretorio in dir_array:
 
     lista_imagens = os.listdir(dir_imagens_orignais)
     for nome_imagem in lista_imagens:
-        cabecalho_arquivo = 'Nome Imagem;'
+        cabecalho_arquivo = 'Imagem;'
         linha_arquivo += nome_imagem + ';'
         imagem_original = imread(dir_imagens_orignais + nome_imagem)
         imagem_ruidosa = imread(dir_imagem_ruidosa + nome_imagem)
