@@ -33,8 +33,8 @@ dir_array = (['./imagens_originais', 'Imagens Originais'],
 
 
 dir_destino = './imagens_originais_filtro_passa_baixa'
-shutil.rmtree(dir_destino, ignore_errors=True)
-os.mkdir(dir_destino)
+#shutil.rmtree(dir_destino, ignore_errors=True)
+#os.mkdir(dir_destino)
 
 
 

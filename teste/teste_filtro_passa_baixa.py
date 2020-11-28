@@ -2,70 +2,135 @@ import numpy as np
 from numpy import fft as fp
 from skimage import img_as_float, img_as_ubyte
 from skimage.io import imread, imsave
-from matplotlib import pylab
-import os
+from skimage.util import random_noise
+from skimage.metrics import peak_signal_noise_ratio as psnr
 from scipy import fftpack
+from matplotlib import pylab
+from skimage.filters import gaussian
+import os
+import shutil
 
+def add_ruido_gaussiano(imagem_original, sigma):
+    imagem_ruido_gaussiano = random_noise(imagem_original, mode='gaussian', var=sigma)
+    return imagem_ruido_gaussiano
 
-dir_imagens_originais = './imagens_ruido_gaussiano/'
-lista_imagens_ruido_gaussiano = os.listdir(dir_imagens_originais)
+def gerar_spectro(transformata_imagem):
+    shift_frq = fftpack.fftshift(transformata_imagem)
+    return (20 * np.log10(0.1 + shift_frq)).real
 
-for nome_imagem in lista_imagens_ruido_gaussiano:
-    imagem_original = imread(dir_imagens_originais +'/'+ nome_imagem, as_gray=True)
-
-    discrete_transform = fp.fft2(imagem_original)
-    (w, h) = discrete_transform.shape
+def aplicar_filtro_passa_baixa(imagem, porcentagem_corte):
+    discrete_transform_imagem = fp.fft2(imagem)
+    (w, h) = discrete_transform_imagem.shape
     half_w, half_h = int(w / 2), int(h / 2)
+    spectro_imagem_original = gerar_spectro(discrete_transform_imagem)
+
+    shift_frq = fftpack.fftshift(discrete_transform_imagem)
+    shift_frq_low = np.copy(shift_frq)
+    
+
+    shift_frq_low[half_w - (int(half_w * porcentagem_corte)):half_w + (int(half_w * porcentagem_corte)) + 1, half_h - (int(half_h * porcentagem_corte)):half_h + (int(half_h * porcentagem_corte)) + 1] = 0
+
+    shift_frq -= shift_frq_low
+    imagem_filtrada = fp.ifft2(fftpack.ifftshift(shift_frq)).real
+    return imagem_filtrada
+
+def aplicar_filtro_passa_alta(imagem, porcentagem_corte):
+    discrete_transform_imagem = fp.fft2(imagem)
+    (w, h) = discrete_transform_imagem.shape
+    half_w, half_h = int(w / 2), int(h / 2)
+    spectro_imagem_original = gerar_spectro(discrete_transform_imagem)
+
+    shift_frq = fftpack.fftshift(discrete_transform_imagem)
+    print(half_w)
+    print(int(half_w * porcentagem_corte))
+
+    shift_frq[half_w - (int(half_w * porcentagem_corte)):half_w + (int(half_w * porcentagem_corte)) + 1, half_h - (int(half_h * porcentagem_corte)):half_h + (int(half_h * porcentagem_corte)) + 1] = 0
+    imagem_filtrada = np.clip(fp.ifft2(fftpack.ifftshift(shift_frq)).real, 0, 255)
+
+    return imagem_filtrada
+
+def plotar(imagem, titulo, l, c, p):
+    pylab.subplot(l, c, p)
+    pylab.axis('off')
+    pylab.title(titulo)
+    pylab.imshow(imagem, cmap='gray')
+
+lista_porcentagem_corte = ([0.05, 0.10, 0.15])
+
+caminho_imagem_original = '../banco_imagens/hz_1235134-PPT.jpg'
+imagem_original = img_as_float(imread(caminho_imagem_original, as_gray=True))
+linha, coluna = imagem_original.shape
+
+quadrante_1 = imagem_original[:int(linha / 2), :int(coluna / 2)]
+quadrante_2 = imagem_original[:int(linha / 2), int(coluna / 2):]
+quadrante_3 = imagem_original[int(linha / 2):, :int(coluna / 2)]
+quadrante_4 = imagem_original[int(linha / 2):, int(coluna / 2):]
 
 
-    for l in (5, 10, 15, 20, 25, 30):
-        #freq1 = np.copy(discrete_transform)
-        shift_frq = fftpack.fftshift(discrete_transform)
-        shift_frq_low = np.copy(shift_frq)
-        shift_frq_low[half_w-l:half_w+l+1, half_h-l:half_h+l+1] = 0
-        spectro_imagem_original = (20 * np.log10(0.1 + shift_frq)).real  # .astype(int)
+quadrante_ruido_1 = add_ruido_gaussiano(quadrante_1, 0.00)
+quadrante_ruido_2 = add_ruido_gaussiano(quadrante_2, 0.05)
+quadrante_ruido_3 = add_ruido_gaussiano(quadrante_3, 0.10)
+quadrante_ruido_4 = add_ruido_gaussiano(quadrante_4, 0.15)
 
-        #select only the first lxl (low) frequencies
-        shift_frq -= shift_frq_low
+imagem_ruido_gaussiano = np.zeros(imagem_original.shape)
+imagem_ruido_gaussiano[:int(linha / 2), :int(coluna / 2)] = quadrante_ruido_1
+imagem_ruido_gaussiano[:int(linha / 2), int(coluna / 2):] = quadrante_ruido_2
+imagem_ruido_gaussiano[int(linha / 2):, :int(coluna / 2)] = quadrante_ruido_3
+imagem_ruido_gaussiano[int(linha / 2):, int(coluna / 2):] = quadrante_ruido_4
 
-        imagem_filtrada = fp.ifft2(fftpack.ifftshift(shift_frq)).real
-        spectro_baixa_frequencia = (20 * np.log10(0.1 + shift_frq)).real  # .astype(int)
+imagem_final_5 = np.zeros(imagem_original.shape)
+imagem_final_10 = np.zeros(imagem_original.shape)
+imagem_final_15 = np.zeros(imagem_original.shape)
 
-        pylab.figure()
-        pylab.suptitle('Frequência de corte ' + str(l))
+imagem_final_5[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_1, 0.05)
+imagem_final_5[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_2, 0.05)
+imagem_final_5[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_3, 0.05)
+imagem_final_5[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_4, 0.05)
 
-        pylab.subplot(3, 3, 1)
-        pylab.axis('off')
-        pylab.title('Imagem Original')
-        pylab.imshow(imagem_original, cmap='gray')
+imagem_final_10[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_1, 0.10)
+imagem_final_10[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_2, 0.10)
+imagem_final_10[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_3, 0.10)
+imagem_final_10[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_4, 0.10)
 
-        pylab.subplot(3, 3, 3)
-        pylab.axis('off')
-        pylab.title('Imagem Filtrada')
-        pylab.imshow(imagem_filtrada, cmap='gray')
+imagem_final_15[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_1, 0.15)
+imagem_final_15[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_2, 0.15)
+imagem_final_15[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_3, 0.15)
+imagem_final_15[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_4, 0.15)
 
-        pylab.subplot(3, 3, 4)
-        pylab.axis('on')
-        pylab.title('Histograma Imagem Original')
-        pylab.hist(img_as_ubyte(imagem_original.flat), bins=256, range=(0, 255), color='black')
+imagem_final_5 = img_as_ubyte(imagem_final_5)
+imagem_final_10 = img_as_ubyte(imagem_final_10)
+imagem_final_15 = img_as_ubyte(imagem_final_15)
 
-        pylab.subplot(3, 3, 6)
-        pylab.axis('on')
-        pylab.title('Histograma Imagem Filtrada')
-        pylab.hist(imagem_filtrada.flat, bins=256, range=(0, 1), color='black')
 
-        pylab.subplot(3, 3, 7)
-        pylab.axis('off')
-        pylab.title('Spectro Imagem Original')
-        pylab.imshow(spectro_imagem_original, cmap='gray')
 
-        pylab.subplot(3, 3, 8)
-        pylab.axis('off')
-        pylab.title('Spectro Imagem Baixa Frequência')
-        pylab.imshow(spectro_baixa_frequencia, cmap='gray')
+print(img_as_ubyte(imagem_final_5))
 
-        pylab.subplots_adjust(wspace=0.1, hspace=0.5)
-        pylab.show()
-        pylab.close()
+pylab.figure()
+pylab.subplot(1, 5, 1)
+pylab.axis('off')
+pylab.title('Imagem Original')
+pylab.imshow(imagem_original, cmap='gray')
 
-print('FIM FILTRO PASSA BAIXA')
+pylab.subplot(1, 5, 2)
+pylab.axis('off')
+pylab.title('Imagem Ruídosa')
+pylab.imshow(imagem_ruido_gaussiano, cmap='gray')
+
+pylab.subplot(1, 5, 3)
+pylab.axis('off')
+pylab.title('Imagem Filtrada 5%')
+pylab.imshow(imagem_final_5, cmap='gray')
+
+pylab.subplot(1, 5, 4)
+pylab.axis('off')
+pylab.title('Imagem Filtrada 10%')
+pylab.imshow(imagem_final_10, cmap='gray')
+
+pylab.subplot(1, 5, 5)
+pylab.axis('off')
+pylab.title('Imagem Filtrada 15%')
+pylab.imshow(imagem_final_15, cmap='gray')
+
+pylab.show()
+
+print('FIM TESTE FILTRO PASSA BAIXA')

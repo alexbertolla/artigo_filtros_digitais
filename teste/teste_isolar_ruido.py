@@ -12,22 +12,38 @@ def add_ruido_gaussiano(imagem_original, sigma):
 
 
 imagem_original = img_as_float(imread('../banco_imagens/hz_1224099-PPT.jpg', as_gray=True))
-print(imagem_original.dtype)
+
 imagem_ruidosa = add_ruido_gaussiano(imagem_original, 1.0)
+
+imagem_ruido_isolado = imagem_ruidosa - imagem_original
+# imagem_ruido_isolado = img_as_ubyte(imagem_ruido_isolado)
+
+
+#imagem_original = np.zeros([728, 728], dtype=np.float)
+#imagem_ruidosa = add_ruido_gaussiano(imagem_original, 1.0)
+#imagem_ruido_isolado = imagem_ruidosa - imagem_original
+
+print(imagem_original.dtype)
 print(imagem_ruidosa.dtype)
-imagem_ruido = abs(imagem_original - imagem_ruidosa)
-imagem_ruido = img_as_ubyte(imagem_ruido)
-print(imagem_ruido)
+print(imagem_ruido_isolado.dtype)
+print(imagem_ruido_isolado)
+
 
 pylab.figure()
-pylab.subplot(1, 3, 1)
+pylab.subplot(1, 5, 1)
 pylab.imshow(imagem_original, cmap='gray')
 
-pylab.subplot(1, 3, 2)
+pylab.subplot(1, 5, 2)
 pylab.imshow(imagem_ruidosa, cmap='gray')
 
-pylab.subplot(1, 3, 3)
-pylab.imshow(imagem_ruido, cmap='gray')
+pylab.subplot(1, 5, 3)
+pylab.imshow(imagem_ruido_isolado, cmap='gray')
+
+pylab.subplot(1, 5, 4)
+pylab.hist(imagem_ruido_isolado.flat)
+
+pylab.subplot(1, 5, 5)
+pylab.hist(img_as_ubyte(imagem_ruido_isolado.flat))
 
 pylab.show()
 print('FIM')
