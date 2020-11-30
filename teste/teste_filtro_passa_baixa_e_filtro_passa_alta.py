@@ -126,7 +126,6 @@ imagem_final_10 = imagem_pa_10 + imagem_pb_10
 imagem_final_15 = imagem_pa_15 + imagem_pb_15
 print(imagem_final_5.dtype)
 
-msr_imagem_
 
 pylab.figure()
 pylab.subplot(3, 5, 1)
