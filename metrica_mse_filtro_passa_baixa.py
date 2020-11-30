@@ -10,8 +10,8 @@ from os import path
 import shutil
 import codecs
 
-def calcular_mse(img_ruidosa, img_filtrada):
-    return round(mse(img_ruidosa, img_filtrada), 2)
+def calcular_mse(img_filtrada, img_ruidosa):
+    return round(mse(img_filtrada, img_ruidosa), 2)
 
 corte_array = (20, 25, 30, 35)
 

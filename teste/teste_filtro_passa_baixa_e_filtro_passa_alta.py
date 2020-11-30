@@ -4,11 +4,15 @@ from skimage import img_as_float, img_as_ubyte
 from skimage.io import imread, imsave
 from skimage.util import random_noise
 from skimage.metrics import peak_signal_noise_ratio as psnr
+from skimage.metrics import mean_squared_error as mse
 from scipy import fftpack
 from matplotlib import pylab
 from skimage.filters import gaussian
 import os
 import shutil
+
+def calcular_mse(img_ruidosa, img_filtrada):
+    return round(mse(img_ruidosa, img_filtrada), 2)
 
 def add_ruido_gaussiano(imagem_original, sigma):
     imagem_ruido_gaussiano = random_noise(imagem_original, mode='gaussian', var=sigma)
@@ -121,6 +125,8 @@ imagem_final_5 = imagem_pa_5 + imagem_pb_5
 imagem_final_10 = imagem_pa_10 + imagem_pb_10
 imagem_final_15 = imagem_pa_15 + imagem_pb_15
 print(imagem_final_5.dtype)
+
+msr_imagem_
 
 pylab.figure()
 pylab.subplot(3, 5, 1)
