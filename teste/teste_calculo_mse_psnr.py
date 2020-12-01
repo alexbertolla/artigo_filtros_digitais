@@ -46,3 +46,4 @@ print('Valores PSNR: ', str(array_psnr))
 print('Mediana PSNR: ', str(np.median(array_psnr)))
 
 print('FIM TESTE MSR E PSNR')
+

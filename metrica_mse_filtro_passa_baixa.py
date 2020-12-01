@@ -1,13 +1,9 @@
 import numpy as np
-from numpy import fft as fp
-from skimage import img_as_float, img_as_ubyte, img_as_float32
-from skimage.io import imread, imsave
+from skimage.io import imread
 from skimage.metrics import mean_squared_error as mse
-from scipy import fftpack
-from matplotlib import pylab
+
 import os
-from os import path
-import shutil
+
 import codecs
 
 def calcular_mse(img_filtrada, img_ruidosa):
@@ -17,6 +13,7 @@ lista_corte = (0.05, 0.1, 0.15)
 caminho_imagem_ruidosa = './imagens_ruido_gaussiano/'
 caminho_imagem_filtrada = './imagens_filtro_passa_baixa/'
 dir_metricas = './metricas/'
+
 
 nome_arquivo = 'mse_filtro_passa_baixa.txt'
 cabecalho_arquivo = 'Imagem;Corte 5%;Corte 10%;Corte 15%;\n'
