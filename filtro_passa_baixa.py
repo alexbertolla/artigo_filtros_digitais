@@ -29,7 +29,7 @@ def aplicar_filtro_passa_baixa(imagem, porcentagem_corte):
 
 lista_corte = (0.05, 0.10, 0.15)
 dir_imagens_ruidosas = './imagens_ruido_gaussiano/'
-dir_imagens_filtro_passa_baixa = './imagens_ruido_gaussiano_filtro_passa_baixa/'
+dir_imagens_filtro_passa_baixa = './imagens_filtro_passa_baixa/'
 
 shutil.rmtree(dir_imagens_filtro_passa_baixa, ignore_errors=True)
 os.mkdir(dir_imagens_filtro_passa_baixa)

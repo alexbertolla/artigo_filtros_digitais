@@ -26,7 +26,7 @@ def aplicar_filtro_passa_alta(imagem, porcentagem_corte):
 
 lista_corte = (0.05, 0.10, 0.15)
 dir_imagens_ruidosas = './imagens_ruido_gaussiano/'
-dir_imagens_filtro_passa_alta = './imagens_ruido_gaussiano_filtro_passa_alta/'
+dir_imagens_filtro_passa_alta = './imagens_filtro_passa_alta/'
 
 shutil.rmtree(dir_imagens_filtro_passa_alta, ignore_errors=True)
 os.mkdir(dir_imagens_filtro_passa_alta)
