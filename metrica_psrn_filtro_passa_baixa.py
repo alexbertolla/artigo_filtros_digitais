@@ -7,7 +7,9 @@ import codecs
 def calcular_psnr(img_ruidosa, img_filtrada):
     return round(psnr(img_ruidosa, img_filtrada), 2)
 
-lista_corte = (0.05, 0.1, 0.15)
+lista_corte = (0.05, 0.10, 0.15)
+#lista_corte = (0.10, 0.15, 0.20, 1)
+caminho_imagem_original = './banco_imagens/'
 caminho_imagem_ruidosa = './imagens_ruido_gaussiano/'
 caminho_imagem_filtrada = './imagens_filtro_passa_baixa/'
 dir_metricas = './metricas/'
@@ -20,8 +22,14 @@ lista_imagens_ruidosas = os.listdir(caminho_imagem_ruidosa)
 for nome_imagem in lista_imagens_ruidosas:
     linha_arquivo += nome_imagem + ';'
 
+    imagem_original = imread(caminho_imagem_original + nome_imagem)
     imagem_ruidosa = imread(caminho_imagem_ruidosa + nome_imagem)
     linha, coluna = imagem_ruidosa.shape
+
+    q1_original = imagem_original[:int(linha / 2), :int(coluna / 2)]
+    q2_original = imagem_original[:int(linha / 2), int(coluna / 2):]
+    q3_original = imagem_original[int(linha / 2), :int(coluna / 2)]
+    q4_original = imagem_original[int(linha / 2), int(coluna / 2):]
 
     q1_ruidoso = imagem_ruidosa[:int(linha / 2), :int(coluna / 2)]
     q2_ruidoso = imagem_ruidosa[:int(linha / 2), int(coluna / 2):]
@@ -37,10 +45,10 @@ for nome_imagem in lista_imagens_ruidosas:
         q4_filtrado = imagem_filtrada[int(linha / 2), int(coluna / 2):]
 
         array_psnr = []
-        array_psnr.append(calcular_psnr(q1_ruidoso, q1_filtrado))
-        array_psnr.append(calcular_psnr(q2_ruidoso, q2_filtrado))
-        array_psnr.append(calcular_psnr(q3_ruidoso, q3_filtrado))
-        array_psnr.append(calcular_psnr(q4_ruidoso, q4_filtrado))
+        array_psnr.append(calcular_psnr(q1_original, q1_filtrado))
+        array_psnr.append(calcular_psnr(q2_original, q2_filtrado))
+        array_psnr.append(calcular_psnr(q3_original, q3_filtrado))
+        array_psnr.append(calcular_psnr(q4_original, q4_filtrado))
         linha_arquivo += str(round(np.median(array_psnr), 2)) + ';'
 
     linha_arquivo += '\n'

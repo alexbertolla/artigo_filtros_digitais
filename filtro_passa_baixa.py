@@ -57,8 +57,9 @@ for porcentagem_corte in lista_corte:
         imagem_filtrada_passa_baixa[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(
             imagem_ruidosa[int(linha / 2):, int(coluna / 2):], porcentagem_corte)
 
-        #imagem_filtrada_passa_baixa = img_as_ubyte(imagem_filtrada_passa_baixa)
+
         imsave(dir_imagens_filtro_passa_baixa + str(porcentagem_corte) + '/' + nome_imagem, imagem_filtrada_passa_baixa)
+
 
 
 print('FIM FILTRO PASSA BAIXA')
