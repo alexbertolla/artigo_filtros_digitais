@@ -14,8 +14,11 @@ def add_ruido_gaussiano(imagem_original, sigma):
     imagem_ruido_gaussiano = random_noise(imagem_original, mode='gaussian', var=sigma)
     return imagem_ruido_gaussiano
 
-def gerar_spectro(transformata_imagem):
-    shift_frq = fftpack.fftshift(transformata_imagem)
+def gerar_spectro(imagem):
+    discrete_transform_imagem = fp.fft2(imagem)
+    (w, h) = discrete_transform_imagem.shape
+    half_w, half_h = int(w / 2), int(h / 2)
+    shift_frq = fftpack.fftshift(discrete_transform_imagem)
     return (20 * np.log10(0.1 + shift_frq)).real
 
 def aplicar_filtro_passa_baixa(imagem, porcentagem_corte):
@@ -102,34 +105,65 @@ imagem_final_10 = img_as_ubyte(imagem_final_10)
 imagem_final_15 = img_as_ubyte(imagem_final_15)
 
 
+spectro_imagem_original = gerar_spectro(imagem_original)
+spectro_imagem_ruidosa = gerar_spectro(imagem_ruido_gaussiano)
+spectro_imagem_final_5 = gerar_spectro(imagem_final_5)
+spectro_imagem_final_10 = gerar_spectro(imagem_final_10)
+spectro_imagem_final_15 = gerar_spectro(imagem_final_15)
+
 
 print(img_as_ubyte(imagem_final_5))
 
 pylab.figure()
-pylab.subplot(1, 5, 1)
+pylab.subplot(2, 5, 1)
 pylab.axis('off')
 pylab.title('Imagem Original')
 pylab.imshow(imagem_original, cmap='gray')
 
-pylab.subplot(1, 5, 2)
+pylab.subplot(2, 5, 2)
 pylab.axis('off')
 pylab.title('Imagem Ruídosa')
 pylab.imshow(imagem_ruido_gaussiano, cmap='gray')
 
-pylab.subplot(1, 5, 3)
+pylab.subplot(2, 5, 3)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 5%')
 pylab.imshow(imagem_final_5, cmap='gray')
 
-pylab.subplot(1, 5, 4)
+pylab.subplot(2, 5, 4)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 10%')
 pylab.imshow(imagem_final_10, cmap='gray')
 
-pylab.subplot(1, 5, 5)
+pylab.subplot(2, 5, 5)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 15%')
 pylab.imshow(imagem_final_15, cmap='gray')
+
+pylab.subplot(2, 5, 6)
+pylab.axis('off')
+pylab.title('Spectro Imagem Original')
+pylab.imshow(spectro_imagem_original, cmap='gray')
+
+pylab.subplot(2, 5, 7)
+pylab.axis('off')
+pylab.title('Spectro Imagem Ruidosa')
+pylab.imshow(spectro_imagem_ruidosa, cmap='gray')
+
+pylab.subplot(2, 5, 8)
+pylab.axis('off')
+pylab.title('Spectro 5%')
+pylab.imshow(spectro_imagem_final_5, cmap='gray')
+
+pylab.subplot(2, 5, 9)
+pylab.axis('off')
+pylab.title('Spectro 10%')
+pylab.imshow(spectro_imagem_final_10, cmap='gray')
+
+pylab.subplot(2, 5, 10)
+pylab.axis('off')
+pylab.title('Spectro 15%')
+pylab.imshow(spectro_imagem_final_15, cmap='gray')
 
 pylab.show()
 
