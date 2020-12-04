@@ -177,6 +177,12 @@ print('lista_psnr_filtro_10: ', str(lista_psnr_filtro_10))
 print('lista_psnr_filtro_13: ', str(lista_psnr_filtro_13))
 print('lista_psnr_filtro_15: ', str(lista_psnr_filtro_15))
 
+print('Filtro 5%: Menor Valor: ' + str(np.min(lista_psnr_filtro_5)) + '. Maior Valor: ' + str(np.max(lista_psnr_filtro_5)))
+print('Filtro 7%: Menor Valor: ' + str(np.min(lista_psnr_filtro_7)) + '. Maior Valor: ' + str(np.max(lista_psnr_filtro_7)))
+print('Filtro 10%: Menor Valor: ' + str(np.min(lista_psnr_filtro_10)) + '. Maior Valor: ' + str(np.max(lista_psnr_filtro_10)))
+print('Filtro 13%: Menor Valor: ' + str(np.min(lista_psnr_filtro_13)) + '. Maior Valor: ' + str(np.max(lista_psnr_filtro_13)))
+print('Filtro 15%: Menor Valor: ' + str(np.min(lista_psnr_filtro_15)) + '. Maior Valor: ' + str(np.max(lista_psnr_filtro_15)))
+
 for idx in range(len(lista_psnr_filtro_5)):
     psnr_5 = lista_psnr_filtro_5[idx]
     psnr_7 = lista_psnr_filtro_7[idx]
@@ -203,93 +209,6 @@ for idx in range(len(lista_psnr_filtro_5)):
         print('psnr 13% é a maior.')
     else:
         print('psnr 15% é a maior.')
-
-
-
-
-
-
-exit('EXIT')
-for porcentagem_corte in lista_corte:
-    print('Porcentagem de corte: ' + str(porcentagem_corte*100) + '%')
-    for nome_imagem in lista_imagens:
-        #print(nome_imagem)
-        imagem_ruidosa = img_as_float(imread(dir_imagens_ruidosas + nome_imagem, as_gray=True))
-        linha, coluna = imagem_ruidosa.shape
-
-        q1_ruidoso = imagem_ruidosa[:int(linha / 2), :int(coluna / 2)]
-        q2_ruidoso = imagem_ruidosa[:int(linha / 2), int(coluna / 2):]
-        q3_ruidoso = imagem_ruidosa[int(linha / 2), :int(coluna / 2)]
-        q4_ruidoso = imagem_ruidosa[int(linha / 2), int(coluna / 2):]
-
-        imagem_filtrada_passa_baixa = np.zeros(imagem_ruidosa.shape)
-
-        imagem_filtrada_passa_baixa[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_baixa(
-            imagem_ruidosa[:int(linha / 2), :int(coluna / 2)], porcentagem_corte)
-
-        imagem_filtrada_passa_baixa[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_baixa(
-            imagem_ruidosa[:int(linha / 2), int(coluna / 2):], porcentagem_corte)
-
-        imagem_filtrada_passa_baixa[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_baixa(
-            imagem_ruidosa[int(linha / 2):, :int(coluna / 2)], porcentagem_corte)
-
-        imagem_filtrada_passa_baixa[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(
-            imagem_ruidosa[int(linha / 2):, int(coluna / 2):], porcentagem_corte)
-
-        q1_filtrado = imagem_filtrada_passa_baixa[:int(linha / 2), :int(coluna / 2)]
-        q2_filtrado = imagem_filtrada_passa_baixa[:int(linha / 2), int(coluna / 2):]
-        q3_filtrado = imagem_filtrada_passa_baixa[int(linha / 2), :int(coluna / 2)]
-        q4_filtrado = imagem_filtrada_passa_baixa[int(linha / 2), int(coluna / 2):]
-
-        array_psnr = []
-        array_psnr.append(calcular_psnr(q1_ruidoso, q1_filtrado))
-        array_psnr.append(calcular_psnr(q2_ruidoso, q2_filtrado))
-        array_psnr.append(calcular_psnr(q3_ruidoso, q3_filtrado))
-        array_psnr.append(calcular_psnr(q4_ruidoso, q4_filtrado))
-
-        array_mse = []
-        array_mse.append(calcular_mse(q1_ruidoso, q1_filtrado))
-        array_mse.append(calcular_mse(q2_ruidoso, q2_filtrado))
-        array_mse.append(calcular_mse(q3_ruidoso, q3_filtrado))
-        array_mse.append(calcular_mse(q4_ruidoso, q4_filtrado))
-
-        if porcentagem_corte == 0.05:
-            lista_psnr_filtro_5.append(round(np.median(array_psnr), 2))
-            lista_mse_filtro_5.append(round(np.median(array_mse), 2))
-        elif porcentagem_corte == 0.10:
-            lista_psnr_filtro_10.append(round(np.median(array_psnr), 2))
-            lista_mse_filtro_10.append(round(np.median(array_mse), 2))
-        else:
-            lista_psnr_filtro_15.append(round(np.median(array_psnr), 2))
-            lista_mse_filtro_15.append(round(np.median(array_mse), 2))
-
-
-
-print('lista_psnr_filtro_5: ', str(lista_psnr_filtro_5))
-print('lista_psnr_filtro_10: ', str(lista_psnr_filtro_10))
-print('lista_psnr_filtro_15: ', str(lista_psnr_filtro_15))
-
-
-for idx in range(len(lista_psnr_filtro_5)):
-    psnr_5 = lista_psnr_filtro_5[idx]
-    psnr_10 = lista_psnr_filtro_10[idx]
-    psnr_15 = lista_psnr_filtro_15[idx]
-
-    mse_5 = lista_mse_filtro_5[idx]
-    mse_10 = lista_mse_filtro_10[idx]
-    mse_15 = lista_mse_filtro_15[idx]
-
-    if psnr_5 > psnr_10:
-        if (psnr_5 > psnr_15) and (mse_5 < mse_15):
-            print('psnr 5% é a maior e mse 5% é a menor.')
-    elif (psnr_10 > psnr_15) and (mse_10 < mse_15):
-            print('psnr 10% é a maior e mse 10% é a menor..')
-    else:
-        print('psnr 15% é a maior e mse 15% é a menor..')
-
-    print('(' + str(psnr_5) + ', ' + str(psnr_10) + ', ' + str(psnr_15) + ')')
-    print('(' + str(mse_5) + ', ' + str(mse_10) + ', ' + str(mse_15) + ')')
-    print()
 
 
 print('FIM ESCOLHER MELHOR FILTRO')
