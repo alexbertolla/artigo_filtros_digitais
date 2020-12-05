@@ -16,6 +16,13 @@ def calcular_psnr(img_original, img_filtrada):
 def calcular_mse(img_original, img_filtrada):
     return round(mse(img_original, img_filtrada), 2)
 
+def gerar_spectro(imagem):
+    discrete_transform_imagem = fp.fft2(imagem)
+    (w, h) = discrete_transform_imagem.shape
+    half_w, half_h = int(w / 2), int(h / 2)
+    shift_frq = fftpack.fftshift(discrete_transform_imagem)
+    return (20 * np.log10(0.1 + shift_frq)).real
+
 def aplicar_filtro_passa_baixa(imagem, porcentagem_corte):
     discrete_transform_imagem = fp.fft2(imagem)
     (w, h) = discrete_transform_imagem.shape
@@ -72,6 +79,13 @@ for nome_imagem in lista_imagens:
     q3_original = imagem_original[int(l/2):, :int(c/2)]
     q4_original = imagem_original[int(l/2):, int(c/2):]
 
+    spectro_imagem_original = gerar_spectro(imagem_original)
+    spectro_imagem_original_quadrantes = np.zeros(spectro_imagem_original.shape)
+    spectro_imagem_original_quadrantes[:int(l/2), :int(c/2)] = gerar_spectro(q1_original)
+    spectro_imagem_original_quadrantes[:int(l/2), int(c/2):] = gerar_spectro(q2_original)
+    spectro_imagem_original_quadrantes[int(l/2):, :int(c/2)] = gerar_spectro(q3_original)
+    spectro_imagem_original_quadrantes[int(l/2):, int(c/2):] = gerar_spectro(q4_original)
+
     ruido_q1 = random.choice(lista_instensidade_ruido)
     ruido_q2 = random.choice(lista_instensidade_ruido)
     ruido_q3 = random.choice(lista_instensidade_ruido)
@@ -80,6 +94,11 @@ for nome_imagem in lista_imagens:
     q2_ruidoso = img_as_ubyte(add_ruido_gaussiano(q2_original, ruido_q2))
     q3_ruidoso = img_as_ubyte(add_ruido_gaussiano(q3_original, ruido_q3))
     q4_ruidoso = img_as_ubyte(add_ruido_gaussiano(q4_original, ruido_q4))
+
+    imagem_ruidosa[:int(l / 2), :int(c / 2)] = q1_ruidoso
+    imagem_ruidosa[:int(l / 2), int(c / 2):] = q2_ruidoso
+    imagem_ruidosa[int(l / 2):, :int(c / 2)] = q3_ruidoso
+    imagem_ruidosa[int(l / 2):, int(c / 2):] = q4_ruidoso
 
     #print(q1_ruidoso.dtype)
     #print(q2_ruidoso.dtype)
@@ -90,6 +109,36 @@ for nome_imagem in lista_imagens:
     print('Insensidade ruído Q2: ' + str(ruido_q2))
     print('Insensidade ruído Q3: ' + str(ruido_q3))
     print('Insensidade ruído Q4: ' + str(ruido_q4))
+
+    pylab.figure()
+    pylab.suptitle(nome_imagem)
+    lin = 2
+    col = 7
+    pos = 8
+
+    pylab.subplot(lin, col, 1), pylab.title('Imagem Original')
+    pylab.axis('off')
+    pylab.imshow(imagem_original, cmap='gray')
+
+    pylab.subplot(lin, col, 2), pylab.title('Imagem Ruidosa')
+    pylab.axis('off')
+    pylab.imshow(imagem_ruidosa, cmap='gray')
+
+    pylab.subplot(lin, col, 3), pylab.title('Q1 (' + str(ruido_q1) + ')')
+    pylab.axis('off')
+    pylab.imshow(q1_ruidoso, cmap='gray')
+
+    pylab.subplot(lin, col, 4), pylab.title('Q2 (' + str(ruido_q2) + ')')
+    pylab.axis('off')
+    pylab.imshow(q2_ruidoso, cmap='gray')
+
+    pylab.subplot(lin, col, 5), pylab.title('Q3 (' + str(ruido_q3) + ')')
+    pylab.axis('off')
+    pylab.imshow(q3_ruidoso, cmap='gray')
+
+    pylab.subplot(lin, col, 6), pylab.title('Q4 (' + str(ruido_q4) + ')')
+    pylab.axis('off')
+    pylab.imshow(q4_ruidoso, cmap='gray')
 
     for porcentagem_corte in lista_porcentagem_corte:
         print('Porcentagem de corte: ' + str(porcentagem_corte * 100) + '%')
@@ -109,10 +158,10 @@ for nome_imagem in lista_imagens:
         imagem_filtrada[int(l / 2):, :int(c / 2)] = q3_filtrado
         imagem_filtrada[int(l / 2):, int(c / 2):] = q4_filtrado
 
-        imagem_ruidosa[:int(l / 2), :int(c / 2)] = q1_ruidoso
-        imagem_ruidosa[:int(l / 2), int(c / 2):] = q2_ruidoso
-        imagem_ruidosa[int(l / 2):, :int(c / 2)] = q3_ruidoso
-        imagem_ruidosa[int(l / 2):, int(c / 2):] = q4_ruidoso
+        #imagem_ruidosa[:int(l / 2), :int(c / 2)] = q1_ruidoso
+        #imagem_ruidosa[:int(l / 2), int(c / 2):] = q2_ruidoso
+        #imagem_ruidosa[int(l / 2):, :int(c / 2)] = q3_ruidoso
+        #imagem_ruidosa[int(l / 2):, int(c / 2):] = q4_ruidoso
 
         array_psnr = []
         array_psnr.append(calcular_psnr(q1_original, q1_filtrado))
@@ -147,24 +196,18 @@ for nome_imagem in lista_imagens:
 
         print('PSNR ('+ str(porcentagem_corte) +'): ' + str(mediana_psnr))
         print('MSE: ('+ str(porcentagem_corte) +'): ' + str(mediana_mse))
+        print()
 
 
 
-        pylab.figure()
-        pylab.suptitle(nome_imagem)
-
-        pylab.subplot(1, 3, 1), pylab.title('Imagem Original')
-        pylab.imshow(imagem_original, cmap='gray')
-
-        pylab.subplot(1, 3, 2), pylab.title('Imagem Ruidosa')
-        pylab.imshow(imagem_ruidosa, cmap='gray')
-
-        pylab.subplot(1, 3, 3), pylab.title('Imagem Filtrada (' + str(porcentagem_corte*100) + '%)')
+        pylab.subplot(lin, col, pos), pylab.title('Imagem Filtrada (' + str(round(porcentagem_corte*100, 2)) + '%)')
+        pylab.axis('off')
         pylab.imshow(imagem_filtrada, cmap='gray')
+        pos += 1
 
 
-        #pylab.show()
-        pylab.close()
+    #pylab.show()
+    #pylab.close()
 
     #print(imagem_ruidosa.dtype)
     #print(imagem_filtrada.dtype)

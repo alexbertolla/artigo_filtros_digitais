@@ -24,7 +24,7 @@ def aplicar_filtro_passa_alta(imagem, porcentagem_corte):
     return imagem_filtrada
 
 
-lista_corte = (0.05, 0.10, 0.15)
+lista_corte = (0.05, 0.07, 0.10, 0.13, 0.15)
 dir_imagens_ruidosas = './imagens_ruido_gaussiano/'
 dir_imagens_filtro_passa_alta = './imagens_filtro_passa_alta/'
 

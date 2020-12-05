@@ -7,7 +7,7 @@ import codecs
 def calcular_psnr(img_ruidosa, img_filtrada):
     return round(psnr(img_ruidosa, img_filtrada), 2)
 
-lista_corte = (0.05, 0.10, 0.15)
+lista_corte = (0.05, 0.07, 0.10, 0.13, 0.15)
 #lista_corte = (0.10, 0.15, 0.20, 1)
 caminho_imagem_original = './banco_imagens/'
 caminho_imagem_ruidosa = './imagens_ruido_gaussiano/'
@@ -15,7 +15,7 @@ caminho_imagem_filtrada = './imagens_filtro_passa_baixa/'
 dir_metricas = './metricas/'
 
 nome_arquivo = 'psnr_filtro_passa_baixa.txt'
-cabecalho_arquivo = 'Imagem;Corte 5%;Corte 10%;Corte 15%;\n'
+cabecalho_arquivo = 'Imagem;Corte 5%;Corte 7%;Corte 10%;Corte 13%;Corte 15%;\n'
 linha_arquivo = ''
 
 lista_imagens_ruidosas = os.listdir(caminho_imagem_ruidosa)

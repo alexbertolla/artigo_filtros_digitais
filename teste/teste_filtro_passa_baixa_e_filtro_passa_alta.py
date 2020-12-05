@@ -51,7 +51,7 @@ def aplicar_filtro_passa_baixa(imagem, porcentagem_corte):
     return imagem_filtrada
 
 
-lista_porcentagem_corte = ([0.05, 0.10, 0.15])
+lista_porcentagem_corte = ([0.05, 0.07, 0.10, 0.13, 0.15])
 
 caminho_imagem_original = '../banco_imagens/hz_1235134-PPT.jpg'
 imagem_original = img_as_float(imread(caminho_imagem_original, as_gray=True))
@@ -75,7 +75,9 @@ imagem_ruido_gaussiano[int(linha / 2):, :int(coluna / 2)] = quadrante_ruido_3
 imagem_ruido_gaussiano[int(linha / 2):, int(coluna / 2):] = quadrante_ruido_4
 
 imagem_pb_5 = np.zeros(imagem_original.shape)
+imagem_pb_7 = np.zeros(imagem_original.shape)
 imagem_pb_10 = np.zeros(imagem_original.shape)
+imagem_pb_13 = np.zeros(imagem_original.shape)
 imagem_pb_15 = np.zeros(imagem_original.shape)
 
 imagem_pb_5[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_1, 0.05)
@@ -83,10 +85,20 @@ imagem_pb_5[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_baixa(quad
 imagem_pb_5[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_3, 0.05)
 imagem_pb_5[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_4, 0.05)
 
+imagem_pb_7[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_1, 0.07)
+imagem_pb_7[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_2, 0.07)
+imagem_pb_7[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_3, 0.07)
+imagem_pb_7[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_4, 0.07)
+
 imagem_pb_10[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_1, 0.10)
 imagem_pb_10[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_2, 0.10)
 imagem_pb_10[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_3, 0.10)
 imagem_pb_10[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_4, 0.10)
+
+imagem_pb_13[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_1, 0.13)
+imagem_pb_13[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_2, 0.13)
+imagem_pb_13[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_3, 0.13)
+imagem_pb_13[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_4, 0.13)
 
 imagem_pb_15[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_baixa(quadrante_ruido_1, 0.15)
 imagem_pb_15[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_2, 0.15)
@@ -94,12 +106,16 @@ imagem_pb_15[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_baixa(qua
 imagem_pb_15[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_baixa(quadrante_ruido_4, 0.15)
 
 imagem_pb_5 = img_as_ubyte(imagem_pb_5)
+imagem_pb_7 = img_as_ubyte(imagem_pb_7)
 imagem_pb_10 = img_as_ubyte(imagem_pb_10)
+imagem_pb_13 = img_as_ubyte(imagem_pb_13)
 imagem_pb_15 = img_as_ubyte(imagem_pb_15)
 
 
 imagem_pa_5 = np.zeros(imagem_original.shape)
+imagem_pa_7 = np.zeros(imagem_original.shape)
 imagem_pa_10 = np.zeros(imagem_original.shape)
+imagem_pa_13 = np.zeros(imagem_original.shape)
 imagem_pa_15 = np.zeros(imagem_original.shape)
 
 imagem_pa_5[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_alta(quadrante_ruido_1, 0.05)
@@ -107,10 +123,20 @@ imagem_pa_5[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_alta(quadr
 imagem_pa_5[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_alta(quadrante_ruido_3, 0.05)
 imagem_pa_5[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_alta(quadrante_ruido_4, 0.05)
 
+imagem_pa_7[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_alta(quadrante_ruido_1, 0.07)
+imagem_pa_7[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_alta(quadrante_ruido_2, 0.07)
+imagem_pa_7[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_alta(quadrante_ruido_3, 0.07)
+imagem_pa_7[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_alta(quadrante_ruido_4, 0.07)
+
 imagem_pa_10[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_alta(quadrante_ruido_1, 0.10)
 imagem_pa_10[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_alta(quadrante_ruido_2, 0.10)
 imagem_pa_10[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_alta(quadrante_ruido_3, 0.10)
 imagem_pa_10[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_alta(quadrante_ruido_4, 0.10)
+
+imagem_pa_13[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_alta(quadrante_ruido_1, 0.13)
+imagem_pa_13[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_alta(quadrante_ruido_2, 0.13)
+imagem_pa_13[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_alta(quadrante_ruido_3, 0.13)
+imagem_pa_13[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_alta(quadrante_ruido_4, 0.13)
 
 imagem_pa_15[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_alta(quadrante_ruido_1, 0.15)
 imagem_pa_15[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_alta(quadrante_ruido_2, 0.15)
@@ -118,95 +144,127 @@ imagem_pa_15[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_alta(quad
 imagem_pa_15[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_alta(quadrante_ruido_4, 0.15)
 
 imagem_pa_5 = img_as_ubyte(imagem_pa_5)
+imagem_pa_7 = img_as_ubyte(imagem_pa_7)
 imagem_pa_10 = img_as_ubyte(imagem_pa_10)
+imagem_pa_13 = img_as_ubyte(imagem_pa_13)
 imagem_pa_15 = img_as_ubyte(imagem_pa_15)
 
 
-
-
 imagem_final_5 = imagem_pa_5 + imagem_pb_5
+imagem_final_7 = imagem_pa_7 + imagem_pb_7
 imagem_final_10 = imagem_pa_10 + imagem_pb_10
+imagem_final_13 = imagem_pa_13 + imagem_pb_13
 imagem_final_15 = imagem_pa_15 + imagem_pb_15
 print(imagem_final_5.dtype)
 
 
 pylab.figure()
-pylab.subplot(3, 5, 1)
+pylab.subplot(3, 7, 1)
 pylab.axis('off')
 pylab.title('Imagem Original')
 pylab.imshow(imagem_original, cmap='gray')
 
-pylab.subplot(3, 5, 2)
+pylab.subplot(3, 7, 2)
 pylab.axis('off')
 pylab.title('Imagem Ruídosa')
 pylab.imshow(imagem_ruido_gaussiano, cmap='gray')
 
-pylab.subplot(3, 5, 3)
+pylab.subplot(3, 7, 3)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 5%')
 pylab.imshow(imagem_pb_5, cmap='gray')
 
-pylab.subplot(3, 5, 4)
+pylab.subplot(3, 7, 4)
+pylab.axis('off')
+pylab.title('Imagem Filtrada 7%')
+pylab.imshow(imagem_pb_7, cmap='gray')
+
+pylab.subplot(3, 7, 5)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 10%')
 pylab.imshow(imagem_pb_10, cmap='gray')
 
-pylab.subplot(3, 5, 5)
+pylab.subplot(3, 7, 6)
+pylab.axis('off')
+pylab.title('Imagem Filtrada 13%')
+pylab.imshow(imagem_pb_13, cmap='gray')
+
+pylab.subplot(3, 7, 7)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 15%')
 pylab.imshow(imagem_pb_15, cmap='gray')
 
-
-pylab.subplot(3, 5, 6)
+pylab.subplot(3, 7, 8)
 pylab.axis('off')
 pylab.title('Imagem Original')
 pylab.imshow(imagem_original, cmap='gray')
 
-pylab.subplot(3, 5, 7)
+pylab.subplot(3, 7, 9)
 pylab.axis('off')
 pylab.title('Imagem Ruídosa')
 pylab.imshow(imagem_ruido_gaussiano, cmap='gray')
 
-pylab.subplot(3, 5, 8)
+pylab.subplot(3, 7, 10)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 5%')
 pylab.imshow(imagem_pa_5, cmap='gray')
 
-pylab.subplot(3, 5, 9)
+pylab.subplot(3, 7, 11)
+pylab.axis('off')
+pylab.title('Imagem Filtrada 7%')
+pylab.imshow(imagem_pa_7, cmap='gray')
+
+pylab.subplot(3, 7, 12)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 10%')
 pylab.imshow(imagem_pa_10, cmap='gray')
 
-pylab.subplot(3, 5, 10)
+pylab.subplot(3, 7, 13)
+pylab.axis('off')
+pylab.title('Imagem Filtrada 13%')
+pylab.imshow(imagem_pa_13, cmap='gray')
+
+pylab.subplot(3, 7, 14)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 15%')
 pylab.imshow(imagem_pa_15, cmap='gray')
 
-
-pylab.subplot(3, 5, 11)
+pylab.subplot(3, 7, 15)
 pylab.axis('off')
 pylab.title('Imagem Original')
 pylab.imshow(imagem_original, cmap='gray')
 
-pylab.subplot(3, 5, 12)
+pylab.subplot(3, 7, 16)
 pylab.axis('off')
 pylab.title('Imagem Ruídosa')
 pylab.imshow(imagem_ruido_gaussiano, cmap='gray')
 
-pylab.subplot(3, 5, 13)
+pylab.subplot(3, 7, 17)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 5%')
 pylab.imshow(imagem_final_5, cmap='gray')
 
-pylab.subplot(3, 5, 14)
+pylab.subplot(3, 7, 18)
+pylab.axis('off')
+pylab.title('Imagem Filtrada 7%')
+pylab.imshow(imagem_final_7, cmap='gray')
+
+pylab.subplot(3, 7, 19)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 10%')
 pylab.imshow(imagem_final_10, cmap='gray')
 
-pylab.subplot(3, 5, 15)
+pylab.subplot(3, 7, 20)
+pylab.axis('off')
+pylab.title('Imagem Filtrada 13%')
+pylab.imshow(imagem_final_13, cmap='gray')
+
+pylab.subplot(3, 7, 21)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 15%')
 pylab.imshow(imagem_final_15, cmap='gray')
+
+
 
 pylab.show()
 
