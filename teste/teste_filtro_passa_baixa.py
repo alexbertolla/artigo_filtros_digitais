@@ -69,6 +69,13 @@ quadrante_2 = imagem_original[:int(linha / 2), int(coluna / 2):]
 quadrante_3 = imagem_original[int(linha / 2):, :int(coluna / 2)]
 quadrante_4 = imagem_original[int(linha / 2):, int(coluna / 2):]
 
+spectro_imagem_original = gerar_spectro(imagem_original)
+spectro_imagem_original_quadrantes = np.zeros(spectro_imagem_original.shape)
+spectro_imagem_original_quadrantes[:int(linha / 2), :int(coluna / 2)] = gerar_spectro(quadrante_1)
+spectro_imagem_original_quadrantes[:int(linha / 2), int(coluna / 2):] = gerar_spectro(quadrante_2)
+spectro_imagem_original_quadrantes[int(linha / 2):, :int(coluna / 2)] = gerar_spectro(quadrante_3)
+spectro_imagem_original_quadrantes[int(linha / 2):, int(coluna / 2):] = gerar_spectro(quadrante_4)
+
 
 quadrante_ruido_1 = add_ruido_gaussiano(quadrante_1, 0.00)
 quadrante_ruido_2 = add_ruido_gaussiano(quadrante_2, 0.05)
@@ -80,6 +87,13 @@ imagem_ruido_gaussiano[:int(linha / 2), :int(coluna / 2)] = quadrante_ruido_1
 imagem_ruido_gaussiano[:int(linha / 2), int(coluna / 2):] = quadrante_ruido_2
 imagem_ruido_gaussiano[int(linha / 2):, :int(coluna / 2)] = quadrante_ruido_3
 imagem_ruido_gaussiano[int(linha / 2):, int(coluna / 2):] = quadrante_ruido_4
+
+spectro_imagem_ruidosa = gerar_spectro(imagem_ruido_gaussiano)
+spectro_ruido_quadrantes = np.zeros(spectro_imagem_ruidosa.shape)
+spectro_ruido_quadrantes[:int(linha / 2), :int(coluna / 2)] = gerar_spectro(quadrante_ruido_1)
+spectro_ruido_quadrantes[:int(linha / 2), int(coluna / 2):] = gerar_spectro(quadrante_ruido_2)
+spectro_ruido_quadrantes[int(linha / 2):, :int(coluna / 2)] = gerar_spectro(quadrante_ruido_3)
+spectro_ruido_quadrantes[int(linha / 2):, int(coluna / 2):] = gerar_spectro(quadrante_ruido_4)
 
 imagem_final_5 = np.zeros(imagem_original.shape)
 imagem_final_10 = np.zeros(imagem_original.shape)
@@ -105,65 +119,110 @@ imagem_final_10 = img_as_ubyte(imagem_final_10)
 imagem_final_15 = img_as_ubyte(imagem_final_15)
 
 
-spectro_imagem_original = gerar_spectro(imagem_original)
-spectro_imagem_ruidosa = gerar_spectro(imagem_ruido_gaussiano)
 spectro_imagem_final_5 = gerar_spectro(imagem_final_5)
+spectro_5_quadrantes = np.zeros(spectro_imagem_final_5.shape)
+spectro_5_quadrantes[:int(linha / 2), :int(coluna / 2)] = gerar_spectro(imagem_final_5[:int(linha / 2), :int(coluna / 2)])
+spectro_5_quadrantes[:int(linha / 2), int(coluna / 2):] = gerar_spectro(imagem_final_5[:int(linha / 2), int(coluna / 2):])
+spectro_5_quadrantes[int(linha / 2):, :int(coluna / 2)] = gerar_spectro(imagem_final_5[int(linha / 2):, :int(coluna / 2)])
+spectro_5_quadrantes[int(linha / 2):, int(coluna / 2):] = gerar_spectro(imagem_final_5[int(linha / 2):, int(coluna / 2):])
+
+
 spectro_imagem_final_10 = gerar_spectro(imagem_final_10)
+spectro_10_quadrantes = np.zeros(spectro_imagem_final_10.shape)
+spectro_10_quadrantes[:int(linha / 2), :int(coluna / 2)] = gerar_spectro(imagem_final_10[:int(linha / 2), :int(coluna / 2)])
+spectro_10_quadrantes[:int(linha / 2), int(coluna / 2):] = gerar_spectro(imagem_final_10[:int(linha / 2), int(coluna / 2):])
+spectro_10_quadrantes[int(linha / 2):, :int(coluna / 2)] = gerar_spectro(imagem_final_10[int(linha / 2):, :int(coluna / 2)])
+spectro_10_quadrantes[int(linha / 2):, int(coluna / 2):] = gerar_spectro(imagem_final_10[int(linha / 2):, int(coluna / 2):])
+
+
 spectro_imagem_final_15 = gerar_spectro(imagem_final_15)
+spectro_15_quadrantes = np.zeros(spectro_imagem_final_15.shape)
+spectro_15_quadrantes[:int(linha / 2), :int(coluna / 2)] = gerar_spectro(imagem_final_15[:int(linha / 2), :int(coluna / 2)])
+spectro_15_quadrantes[:int(linha / 2), int(coluna / 2):] = gerar_spectro(imagem_final_15[:int(linha / 2), int(coluna / 2):])
+spectro_15_quadrantes[int(linha / 2):, :int(coluna / 2)] = gerar_spectro(imagem_final_15[int(linha / 2):, :int(coluna / 2)])
+spectro_15_quadrantes[int(linha / 2):, int(coluna / 2):] = gerar_spectro(imagem_final_15[int(linha / 2):, int(coluna / 2):])
 
 
 print(img_as_ubyte(imagem_final_5))
 
 pylab.figure()
-pylab.subplot(2, 5, 1)
+pylab.subplot(3, 5, 1)
 pylab.axis('off')
 pylab.title('Imagem Original')
 pylab.imshow(imagem_original, cmap='gray')
 
-pylab.subplot(2, 5, 2)
+pylab.subplot(3, 5, 2)
 pylab.axis('off')
 pylab.title('Imagem Ruídosa')
 pylab.imshow(imagem_ruido_gaussiano, cmap='gray')
 
-pylab.subplot(2, 5, 3)
+pylab.subplot(3, 5, 3)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 5%')
 pylab.imshow(imagem_final_5, cmap='gray')
 
-pylab.subplot(2, 5, 4)
+pylab.subplot(3, 5, 4)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 10%')
 pylab.imshow(imagem_final_10, cmap='gray')
 
-pylab.subplot(2, 5, 5)
+pylab.subplot(3, 5, 5)
 pylab.axis('off')
 pylab.title('Imagem Filtrada 15%')
 pylab.imshow(imagem_final_15, cmap='gray')
 
-pylab.subplot(2, 5, 6)
+pylab.subplot(3, 5, 6)
 pylab.axis('off')
 pylab.title('Spectro Imagem Original')
 pylab.imshow(spectro_imagem_original, cmap='gray')
 
-pylab.subplot(2, 5, 7)
+pylab.subplot(3, 5, 7)
 pylab.axis('off')
 pylab.title('Spectro Imagem Ruidosa')
 pylab.imshow(spectro_imagem_ruidosa, cmap='gray')
 
-pylab.subplot(2, 5, 8)
+pylab.subplot(3, 5, 8)
 pylab.axis('off')
 pylab.title('Spectro 5%')
 pylab.imshow(spectro_imagem_final_5, cmap='gray')
 
-pylab.subplot(2, 5, 9)
+pylab.subplot(3, 5, 9)
 pylab.axis('off')
 pylab.title('Spectro 10%')
 pylab.imshow(spectro_imagem_final_10, cmap='gray')
 
-pylab.subplot(2, 5, 10)
+pylab.subplot(3, 5, 10)
 pylab.axis('off')
 pylab.title('Spectro 15%')
 pylab.imshow(spectro_imagem_final_15, cmap='gray')
+
+
+pylab.subplot(3, 5, 11)
+pylab.axis('off')
+pylab.title('Spectro Quadrantes')
+pylab.imshow(spectro_imagem_original_quadrantes, cmap='gray')
+
+pylab.subplot(3, 5, 12)
+pylab.axis('off')
+pylab.title('Spectros Ruidos')
+pylab.imshow(spectro_ruido_quadrantes, cmap='gray')
+
+pylab.subplot(3, 5, 13)
+pylab.axis('off')
+pylab.title('Spectros Ruidos 5')
+pylab.imshow(spectro_5_quadrantes, cmap='gray')
+
+pylab.subplot(3, 5, 14)
+pylab.axis('off')
+pylab.title('Spectros Ruidos 10')
+pylab.imshow(spectro_10_quadrantes, cmap='gray')
+
+pylab.subplot(3, 5, 15)
+pylab.axis('off')
+pylab.title('Spectros Ruidos 15')
+pylab.imshow(spectro_15_quadrantes, cmap='gray')
+
+
 
 pylab.show()
 
