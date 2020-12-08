@@ -10,21 +10,18 @@ def gerar_spectro(transformata_imagem):
     shift_frq = fftpack.fftshift(transformata_imagem)
     return (20 * np.log10(0.1 + shift_frq)).real
 
-def aplicar_filtro_passa_alta(imagem, porcentagem_corte):
-    discrete_transform_imagem = fp.fft2(imagem)
-    (w, h) = discrete_transform_imagem.shape
+def filtro_passa_alta(imagem, porcentagem_corte):
+    freq = fp.fft2(imagem)
+    sfreq = fp.fftshift(freq)
+    (w, h) = freq.shape
     half_w, half_h = int(w / 2), int(h / 2)
-    spectro_imagem_original = gerar_spectro(discrete_transform_imagem)
-
-    shift_frq = fftpack.fftshift(discrete_transform_imagem)
-
-    shift_frq[half_w - (int(half_w * porcentagem_corte)):half_w + (int(half_w * porcentagem_corte)) + 1, half_h - (int(half_h * porcentagem_corte)):half_h + (int(half_h * porcentagem_corte)) + 1] = 0
-    imagem_filtrada = np.clip(fp.ifft2(fftpack.ifftshift(shift_frq)).real, 0, 255)
-
-    return imagem_filtrada
+    fcorte = int(half_w * porcentagem_corte)
+    sfreq[half_w - fcorte:half_w + fcorte + 1, half_h - fcorte:half_h + fcorte + 1] = 0
+    imagem_passa_alta = fp.ifft2(fp.ifftshift(sfreq)).real
+    return imagem_passa_alta
 
 
-lista_corte = (0.05, 0.07, 0.10, 0.13, 0.15)
+lista_porcentagem_corte = ([0.005, 0.01, 0.015, 0.02, 0.025, 0.03])
 dir_imagens_ruidosas = './imagens_ruido_gaussiano/'
 dir_imagens_filtro_passa_alta = './imagens_filtro_passa_alta/'
 
@@ -32,30 +29,47 @@ shutil.rmtree(dir_imagens_filtro_passa_alta, ignore_errors=True)
 os.mkdir(dir_imagens_filtro_passa_alta)
 
 lista_imagens = os.listdir(dir_imagens_ruidosas)
-for porcentagem_corte in lista_corte:
+total_imagens = len(lista_imagens)
+total_filtros = len(lista_porcentagem_corte)
+aux_total_filtros = 1
+
+
+for porcentagem_corte in lista_porcentagem_corte:
     os.mkdir(dir_imagens_filtro_passa_alta + str(porcentagem_corte))
-    print(dir_imagens_filtro_passa_alta + str(porcentagem_corte))
+    print('diretório ' + dir_imagens_filtro_passa_alta + str(porcentagem_corte) + ' criado ')
+    aux_total_imagens = 1
     for nome_imagem in lista_imagens:
-        print(nome_imagem)
-        imagem_ruidosa = img_as_float(imread(dir_imagens_ruidosas + nome_imagem, as_gray=True))
-        linha, coluna = imagem_ruidosa.shape
+        print(str(aux_total_filtros) + ' de ' + str(total_filtros) + ' filtros' + ' | ' + str(aux_total_imagens) + ' de ' + str(total_imagens) + ' imagens')
+        aux_total_imagens += 1
 
-        imagem_filtrada_passa_alta = img_as_float(np.zeros(imagem_ruidosa.shape))
+        imagem_ruido = img_as_float(imread(dir_imagens_ruidosas + nome_imagem, as_gray=True))
 
-        imagem_filtrada_passa_alta[:int(linha / 2), :int(coluna / 2)] = aplicar_filtro_passa_alta(
-            imagem_ruidosa[:int(linha / 2), :int(coluna / 2)], porcentagem_corte)
+        #############SEPARA QUADRANTES#############
+        linha, coluna = imagem_ruido.shape
+        q1_ruido = imagem_ruido[:int(linha / 2), :int(coluna / 2)]
+        q2_ruido = imagem_ruido[:int(linha / 2), int(coluna / 2):]
+        q3_ruido = imagem_ruido[int(linha / 2):, :int(coluna / 2)]
+        q4_ruido = imagem_ruido[int(linha / 2):, int(coluna / 2):]
+        #############FIM SEPARA QUADRANTES#############
 
-        imagem_filtrada_passa_alta[:int(linha / 2), int(coluna / 2):] = aplicar_filtro_passa_alta(
-            imagem_ruidosa[:int(linha / 2), int(coluna / 2):], porcentagem_corte)
 
-        imagem_filtrada_passa_alta[int(linha / 2):, :int(coluna / 2)] = aplicar_filtro_passa_alta(
-            imagem_ruidosa[int(linha / 2):, :int(coluna / 2)], porcentagem_corte)
+        q1_filtro = filtro_passa_alta(q1_ruido, porcentagem_corte)
+        q2_filtro = filtro_passa_alta(q2_ruido, porcentagem_corte)
+        q3_filtro = filtro_passa_alta(q3_ruido, porcentagem_corte)
+        q4_filtro = filtro_passa_alta(q4_ruido, porcentagem_corte)
 
-        imagem_filtrada_passa_alta[int(linha / 2):, int(coluna / 2):] = aplicar_filtro_passa_alta(
-            imagem_ruidosa[int(linha / 2):, int(coluna / 2):], porcentagem_corte)
+        imagem_filtrada = np.zeros(imagem_ruido.shape)
+        imagem_filtrada[:int(linha / 2), :int(coluna / 2)] = q1_filtro
+        imagem_filtrada[:int(linha / 2), int(coluna / 2):] = q2_filtro
+        imagem_filtrada[int(linha / 2):, :int(coluna / 2)] = q3_filtro
+        imagem_filtrada[int(linha / 2):, int(coluna / 2):] = q4_filtro
 
-        imagem_filtrada_passa_alta = img_as_ubyte(imagem_filtrada_passa_alta)
-        imsave(dir_imagens_filtro_passa_alta + str(porcentagem_corte) + '/' + nome_imagem, imagem_filtrada_passa_alta)
+        imagem_filtrada = img_as_ubyte(imagem_filtrada)
+        imsave(dir_imagens_filtro_passa_alta + str(porcentagem_corte) + '/' + nome_imagem, imagem_filtrada)
+        #print(dir_imagens_filtro_passa_alta + str(porcentagem_corte) + '/' + nome_imagem)
+    aux_total_filtros += 1
+
+
 
 
 print('FIM FILTRO PASSA ALTA')
