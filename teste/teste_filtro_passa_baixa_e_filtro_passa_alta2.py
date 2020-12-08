@@ -52,22 +52,21 @@ def filtro_passa_alta(imagem, porcentagem_corte):
     return imagem_passa_alta
 
 
-lista_porcentagem_corte = ([0.05, 0.07, 0.10, 0.13, 0.15])
 
 caminho_imagem_original = '../banco_imagens/hz_1235134-PPT.jpg'
 imagem_original = img_as_float(imread(caminho_imagem_original, as_gray=True))
 linha, coluna = imagem_original.shape
 
-quadrante_1 = imagem_original[:int(linha / 2), :int(coluna / 2)]
-quadrante_2 = imagem_original[:int(linha / 2), int(coluna / 2):]
-quadrante_3 = imagem_original[int(linha / 2):, :int(coluna / 2)]
-quadrante_4 = imagem_original[int(linha / 2):, int(coluna / 2):]
+q1 = imagem_original[:int(linha / 2), :int(coluna / 2)]
+q2 = imagem_original[:int(linha / 2), int(coluna / 2):]
+q3 = imagem_original[int(linha / 2):, :int(coluna / 2)]
+q4 = imagem_original[int(linha / 2):, int(coluna / 2):]
 
 
-quadrante_ruido_1 = add_ruido_gaussiano(quadrante_1, 0.00)
-quadrante_ruido_2 = add_ruido_gaussiano(quadrante_2, 0.05)
-quadrante_ruido_3 = add_ruido_gaussiano(quadrante_3, 0.10)
-quadrante_ruido_4 = add_ruido_gaussiano(quadrante_4, 0.15)
+quadrante_ruido_1 = add_ruido_gaussiano(q1, 0.00)
+quadrante_ruido_2 = add_ruido_gaussiano(q2, 0.05)
+quadrante_ruido_3 = add_ruido_gaussiano(q3, 0.10)
+quadrante_ruido_4 = add_ruido_gaussiano(q4, 0.15)
 
 imagem_ruido_gaussiano = np.zeros(imagem_original.shape)
 imagem_ruido_gaussiano[:int(linha / 2), :int(coluna / 2)] = quadrante_ruido_1

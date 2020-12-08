@@ -25,14 +25,25 @@ quadrante1_1 = quadrante1[:int(linha_q/2), :int(coluna_q/2)]
 #imsave('quadrante_4.jpg', img_as_ubyte(quadrante4))
 
 plt.title('Divisão da Imagem')
+
+
 plt.subplot(2, 2, 1)
-plt.imshow(quadrante1)
+plt.axis('off')
+plt.imshow(quadrante1, cmap='gray')
+
 plt.subplot(2, 2, 2)
-plt.imshow(quadrante1_1)
+plt.axis('off')
+plt.imshow(quadrante2, cmap='gray')
+
+
 plt.subplot(2, 2, 3)
-plt.imshow(quadrante3)
+plt.axis('off')
+plt.imshow(quadrante3, cmap='gray')
+
 plt.subplot(2, 2, 4)
-plt.imshow(quadrante4)
+plt.axis('off')
+plt.imshow(quadrante4, cmap='gray')
+
 plt.show()
 #print(quadrante1)
 

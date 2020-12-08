@@ -99,11 +99,16 @@ imagem_pa[int(linha / 2):, int(coluna / 2):] = q4_pa
 #############FIM SEPARA QUADRANTES#############
 
 img_final = imagem_pb + imagem_pa
+epectro = gerar_spectro(imagem_pa)
+pylab.figure()
+pylab.imshow(epectro, cmap='gray')
+pylab.show()
+exit()
 #print(img_final*255)
 #exit()
 cv2.imshow('passa alta ' + str(corte_pa), imagem_pa)
 cv2.imshow('passa baixa ' + str(corte_pb), imagem_pb)
-cv2.imshow('imagem final ', img_final)
+cv2.imshow('imagem final ', epectro)
 cv2.waitKey()
 cv2.destroyAllWindows()
 
