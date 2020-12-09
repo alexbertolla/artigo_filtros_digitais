@@ -7,12 +7,12 @@ import os
 
 import codecs
 
-def calcular_mse(img_filtrada, img_ruidosa):
-    return round(mse(img_filtrada, img_ruidosa), 2)
+def calcular_mse(img1, img2):
+    return round(mse(img1, img2), 2)
 
 
-def calcular_psnr(img_ruidosa, img_filtrada):
-    return round(psnr(img_ruidosa, img_filtrada), 2)
+def calcular_psnr(img1, img2):
+    return round(psnr(img1, img2), 2)
 
 
 def salvar_arquivo(diretorio_arquivo, nome_arquivo, conteudo_arquivo):
@@ -22,6 +22,7 @@ def salvar_arquivo(diretorio_arquivo, nome_arquivo, conteudo_arquivo):
 
 
 lista_corte = (0.05, 0.07, 0.10, 0.13, 0.15)
+caminho_imagem_original = './banco_imagens/'
 caminho_imagem_ruidosa = './imagens_ruido_gaussiano/'
 lista_caminho_imagem_filtrada = (['./imagens_filtro_passa_alta/', '_alta_'], ['./imagens_filtro_passa_baixa/', '_baixa_'])
 
@@ -60,17 +61,25 @@ for caminho_imagem_filtrada in lista_caminho_imagem_filtrada:
             q3_filtrado = imagem_filtrada[int(linha / 2), :int(coluna / 2)]
             q4_filtrado = imagem_filtrada[int(linha / 2), int(coluna / 2):]
 
+            # ABRIR IMAGENS ORIGINAIS
+            imagem_original = imread(caminho_imagem_original + '/' + nome_imagem)
+            q1_original = imagem_original[:int(linha / 2), :int(coluna / 2)]
+            q2_original = imagem_original[:int(linha / 2), int(coluna / 2):]
+            q3_original = imagem_original[int(linha / 2), :int(coluna / 2)]
+            q4_original = imagem_original[int(linha / 2), int(coluna / 2):]
+
             #CALCULAR MSE
-            q1_mse = calcular_mse(q1_ruidoso, q1_filtrado)
-            q2_mse = calcular_mse(q2_ruidoso, q2_filtrado)
-            q3_mse = calcular_mse(q3_ruidoso, q3_filtrado)
-            q4_mse = calcular_mse(q4_ruidoso, q4_filtrado)
+            q1_mse = calcular_mse(q1_original, q1_filtrado)
+            q2_mse = calcular_mse(q2_original, q2_filtrado)
+            q3_mse = calcular_mse(q3_original, q3_filtrado)
+            q4_mse = calcular_mse(q4_original, q4_filtrado)
+
 
             # CALCULAR PSNR
-            q1_psnr = calcular_psnr(q1_ruidoso, q1_filtrado)
-            q2_psnr = calcular_psnr(q2_ruidoso, q2_filtrado)
-            q3_psnr = calcular_psnr(q3_ruidoso, q3_filtrado)
-            q4_psnr = calcular_psnr(q4_ruidoso, q4_filtrado)
+            q1_psnr = calcular_psnr(q1_original, q1_filtrado)
+            q2_psnr = calcular_psnr(q2_original, q2_filtrado)
+            q3_psnr = calcular_psnr(q3_original, q3_filtrado)
+            q4_psnr = calcular_psnr(q4_original, q4_filtrado)
 
             linha_arquivo_mse += nome_imagem + ';' + str(q1_mse) + ';' + str(q2_mse) + ';' + str(q3_mse) + ';' + str(q4_mse)
             linha_arquivo_mse += '\n'
@@ -81,4 +90,4 @@ for caminho_imagem_filtrada in lista_caminho_imagem_filtrada:
         salvar_arquivo(dir_metricas, nome_arquivo_mse, linha_arquivo_mse)
         salvar_arquivo(dir_metricas, nome_arquivo_psnr, linha_arquivo_psnr)
 
-print('FIM MÉTRICA MSE')
+print('FIM CALCULAR MÉTRICAS MSE & PSNR')

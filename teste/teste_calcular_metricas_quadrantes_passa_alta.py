@@ -58,11 +58,54 @@ for corte in lista_porcentagem_corte_passa_alta:
     lista_q2.append([corte, sublista_q2])
     lista_q3.append([corte, sublista_q3])
     lista_q4.append([corte, sublista_q4])
-print('lista_q1: ' + str(len(lista_q1)))
-print('lista_q2: ' + str(len(lista_q2)))
-print('lista_q3: ' + str(len(lista_q3)))
-print('lista_q4: ' + str(len(lista_q4)))
 
-print(lista_q1)
+
+
+    q1_max1_psnr = np.max(sublista_q1)
+    q2_max1_psnr = np.max(sublista_q2)
+    q3_max1_psnr = np.max(sublista_q3)
+    q4_max1_psnr = np.max(sublista_q4)
+
+    sublista_q1.remove(q1_max1_psnr)
+    sublista_q2.remove(q2_max1_psnr)
+    sublista_q3.remove(q3_max1_psnr)
+    sublista_q4.remove(q4_max1_psnr)
+
+
+    q1_max2_psnr = np.max(sublista_q1)
+    q2_max2_psnr = np.max(sublista_q2)
+    q3_max2_psnr = np.max(sublista_q3)
+    q4_max2_psnr = np.max(sublista_q4)
+
+
+
+    sublista_q1.remove(q1_max2_psnr)
+    sublista_q2.remove(q2_max2_psnr)
+    sublista_q3.remove(q3_max2_psnr)
+    sublista_q4.remove(q4_max2_psnr)
+
+    q1_max3_psnr = np.max(sublista_q1)
+    q2_max3_psnr = np.max(sublista_q2)
+    q3_max3_psnr = np.max(sublista_q3)
+    q4_max3_psnr = np.max(sublista_q4)
+
+    sublista_q1.remove(q1_max3_psnr)
+    sublista_q2.remove(q2_max3_psnr)
+    sublista_q3.remove(q3_max3_psnr)
+    sublista_q4.remove(q4_max3_psnr)
+
+    print('Filtro passa alta, porcentagem de corte: ' + str(corte))
+    print('Melhores PSNRs Q1: ' + str(q1_max1_psnr) + ', ' + str(q1_max2_psnr) + ', ' + str(q1_max3_psnr))
+    print('Melhores PSNRs Q2: ' + str(q2_max1_psnr) + ', ' + str(q2_max2_psnr) + ', ' + str(q2_max3_psnr))
+    print('Melhores PSNRs Q3: ' + str(q3_max1_psnr) + ', ' + str(q3_max2_psnr) + ', ' + str(q3_max3_psnr))
+    print('Melhores PSNRs Q4: ' + str(q4_max1_psnr) + ', ' + str(q4_max2_psnr) + ', ' + str(q4_max3_psnr))
+
+    print()
+
+#print('lista_q1: ' + str(len(lista_q1)))
+#print('lista_q2: ' + str(len(lista_q2)))
+#print('lista_q3: ' + str(len(lista_q3)))
+#print('lista_q4: ' + str(len(lista_q4)))
+
 
 print('FIM TESTE CALCULAR METRICAS QUADRANTES')
