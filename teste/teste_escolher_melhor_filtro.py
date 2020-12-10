@@ -55,23 +55,23 @@ def processar_filtros(imagem_original, imagem_filtrada):
     lista_psnr = []
     lista_mse = []
     l, c = imagem_original.shape
-    q1_original = imagem_original[:int(l / 2), int(c / 2):]  # QUADRANTE 1
-    q2_original = imagem_original[int(l / 2):, int(c / 2):]  # QUADRANTE 2
-    q3_original = imagem_original[int(l / 2):, :int(c / 2)]  # QUADRANTE 3
-    q4_original = imagem_original[:int(l / 2), :int(c / 2)]  # QUADRANTE 4
+    q1_original = imagem_original[:int(l / 2), :int(c / 2)]  # QUADRANTE 1
+    q2_original = imagem_original[:int(l / 2), int(c / 2):]  # QUADRANTE 2
+    q3_original = imagem_original[int(l / 2):, int(c / 2):]  # QUADRANTE 3
+    q4_original = imagem_original[int(l / 2):, :int(c / 2)]  # QUADRANTE 4
+
+    q1_filtro = imagem_filtrada[:int(l / 2), :int(c / 2)]  # QUADRANTE 1
+    q2_filtro = imagem_filtrada[:int(l / 2), int(c / 2):]  # QUADRANTE 2
+    q3_filtro = imagem_filtrada[int(l / 2):, int(c / 2):]  # QUADRANTE 3
+    q4_filtro = imagem_filtrada[int(l / 2):, :int(c / 2)]  # QUADRANTE 4
 
 
-    q1_fitlro = imagem_filtrada[:int(l / 2), int(c / 2):]  # QUADRANTE 1
-    q2_filtro = imagem_filtrada[int(l / 2):, int(c / 2):]  # QUADRANTE 2
-    q3_filtro = imagem_filtrada[int(l / 2):, :int(c / 2)]  # QUADRANTE 3
-    q4_filtro = imagem_filtrada[:int(l / 2), :int(c / 2)]  # QUADRANTE 4
-
-    lista_psnr.append(calcular_psnr(q1_original, q1_fitlro))
+    lista_psnr.append(calcular_psnr(q1_original, q1_filtro))
     lista_psnr.append(calcular_psnr(q2_original, q2_filtro))
     lista_psnr.append(calcular_psnr(q3_original, q3_filtro))
     lista_psnr.append(calcular_psnr(q4_original, q4_filtro))
 
-    lista_mse.append(calcular_mse(q1_original, q1_fitlro))
+    lista_mse.append(calcular_mse(q1_original, q1_filtro))
     lista_mse.append(calcular_mse(q2_original, q2_filtro))
     lista_mse.append(calcular_mse(q3_original, q3_filtro))
     lista_mse.append(calcular_mse(q4_original, q4_filtro))
@@ -232,10 +232,11 @@ for nome_imagem in lista_nome_imagem:
 
     nova_imagem_passa_alta = np.zeros(imagem_original.shape)
     l, c = imagem_ruido.shape
-    q1_r = imagem_ruido[:int(l / 2), int(c / 2):]  # QUADRANTE 1
-    q2_r = imagem_ruido[int(l / 2):, int(c / 2):]  # QUADRANTE 2
-    q3_r = imagem_ruido[int(l / 2):, :int(c / 2)]  # QUADRANTE 3
-    q4_r = imagem_ruido[:int(l / 2), :int(c / 2)]  # QUADRANTE 4
+    q1_r = imagem_ruido[:int(l / 2), :int(c / 2)]  # QUADRANTE 1
+    q2_r = imagem_ruido[:int(l / 2), int(c / 2):]  # QUADRANTE 2
+    q3_r = imagem_ruido[int(l / 2):, int(c / 2):]  # QUADRANTE 3
+    q4_r = imagem_ruido[int(l / 2):, :int(c / 2)]  # QUADRANTE 4
+
 
     #print(melhores_porcentagens_passa_alta[0])
     q1_pa = filtro_passa_alta(q1_r, float(melhores_porcentagens_passa_alta[0]))
@@ -243,20 +244,22 @@ for nome_imagem in lista_nome_imagem:
     q3_pa = filtro_passa_alta(q3_r, float(melhores_porcentagens_passa_alta[2]))
     q4_pa = filtro_passa_alta(q4_r, float(melhores_porcentagens_passa_alta[3]))
 
-    nova_imagem_passa_alta[:int(l / 2), int(c / 2):] = q1_pa  # QUADRANTE 1
-    nova_imagem_passa_alta[int(l / 2):, int(c / 2):] = q2_pa  # QUADRANTE 2
-    nova_imagem_passa_alta[int(l / 2):, :int(c / 2)] = q3_pa  # QUADRANTE 3
-    nova_imagem_passa_alta[:int(l / 2), :int(c / 2)] = q4_pa  # QUADRANTE 4
+    nova_imagem_passa_alta[:int(l / 2), :int(c / 2)] = q1_pa  # QUADRANTE 1
+    nova_imagem_passa_alta[:int(l / 2), int(c / 2):] = q2_pa  # QUADRANTE 2
+    nova_imagem_passa_alta[int(l / 2):, int(c / 2):] = q3_pa  # QUADRANTE 3
+    nova_imagem_passa_alta[int(l / 2):, :int(c / 2)] = q4_pa  # QUADRANTE 4
+
 
     nova_imagem_passa_baixa = np.zeros(imagem_original.shape)
     q1_pb = filtro_passa_baixa(q1_r, float(melhores_porcentagens_passa_baixa[0]))
     q2_pb = filtro_passa_baixa(q2_r, float(melhores_porcentagens_passa_baixa[1]))
     q3_pb = filtro_passa_baixa(q3_r, float(melhores_porcentagens_passa_baixa[2]))
     q4_pb = filtro_passa_baixa(q4_r, float(melhores_porcentagens_passa_baixa[3]))
-    nova_imagem_passa_baixa[:int(l / 2), int(c / 2):] = q1_pb  # QUADRANTE 1
-    nova_imagem_passa_baixa[int(l / 2):, int(c / 2):] = q2_pb  # QUADRANTE 2
-    nova_imagem_passa_baixa[int(l / 2):, :int(c / 2)] = q3_pb  # QUADRANTE 3
-    nova_imagem_passa_baixa[:int(l / 2), :int(c / 2)] = q4_pb  # QUADRANTE 4
+    nova_imagem_passa_baixa[:int(l / 2), :int(c / 2)] = q1_pb  # QUADRANTE 1
+    nova_imagem_passa_baixa[:int(l / 2), int(c / 2):] = q2_pb  # QUADRANTE 2
+    nova_imagem_passa_baixa[int(l / 2):, int(c / 2):] = q3_pb  # QUADRANTE 3
+    nova_imagem_passa_baixa[int(l / 2):, :int(c / 2)] = q4_pb  # QUADRANTE 4
+
 
     pylab.subplot(linha, coluna, p)
     titulo_pa = 'q1:' + melhores_porcentagens_passa_alta[0] + '|'

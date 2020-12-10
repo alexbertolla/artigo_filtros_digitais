@@ -28,7 +28,7 @@ def montar_imagem(array_imagem, imagem_montada):
 
 def add_ruido_gaussiano(imagem_original, sigma):
     #sigma = 0.05
-    print('Add ruído sigma = ', sigma)
+    #print('Add ruído sigma = ', sigma)
     imagem_ruido_gaussiano = random_noise(imagem_original, var=sigma)
     return imagem_ruido_gaussiano
 
@@ -42,7 +42,12 @@ os.mkdir(dir_imagens_ruido_gaussiano)
 lista_ruido = [0.00, 0.05, 0.10, 0.15]
 
 lista_imagens_originais = os.listdir(dir_imagens_redimensionadas)
+total_imagem = len(lista_imagens_originais)
+aux_total_imagem = 1
 for nome_imagem in lista_imagens_originais:
+    print(str(aux_total_imagem) + ' de ' + str(total_imagem) + ' imagens.')
+    aux_total_imagem += 1
+    
     imagem_original = img_as_float(imread(dir_imagens_redimensionadas +'/'+ nome_imagem, as_gray=True))
 
     linha, coluna = imagem_original.shape
@@ -50,43 +55,6 @@ for nome_imagem in lista_imagens_originais:
     imagem_ruidosa = np.zeros(imagem_original.shape)
 
     imagem_dividida = dividir_imagem(imagem_original)
-
-
-    subq1 = dividir_imagem(imagem_dividida[0])
-    subq1[0] = add_ruido_gaussiano(subq1[0], 0.0)
-    subq1[1] = add_ruido_gaussiano(subq1[1], 0.05)
-    subq1[2] = add_ruido_gaussiano(subq1[2], 0.10)
-    subq1[3] = add_ruido_gaussiano(subq1[3], 0.15)
-
-    subq2 = dividir_imagem(imagem_dividida[1])
-    subq2[0] = add_ruido_gaussiano(subq2[0], 0.20)
-    subq2[1] = add_ruido_gaussiano(subq2[1], 0.25)
-    subq2[2] = add_ruido_gaussiano(subq2[2], 0.30)
-    subq2[3] = add_ruido_gaussiano(subq2[3], 0.35)
-
-    subq3 = dividir_imagem(imagem_dividida[2])
-    subq3[0] = add_ruido_gaussiano(subq3[0], 0.40)
-    subq3[1] = add_ruido_gaussiano(subq3[1], 0.45)
-    subq3[2] = add_ruido_gaussiano(subq3[2], 0.50)
-    subq3[3] = add_ruido_gaussiano(subq3[3], 0.55)
-
-    subq4 = dividir_imagem(imagem_dividida[3])
-    subq4[0] = add_ruido_gaussiano(subq4[0], 0.60)
-    subq4[1] = add_ruido_gaussiano(subq4[1], 0.65)
-    subq4[2] = add_ruido_gaussiano(subq4[2], 0.70)
-    subq4[3] = add_ruido_gaussiano(subq4[3], 0.75)
-
-    q1 = np.zeros(imagem_dividida[0].shape)
-    q1 = montar_imagem(subq1, q1)
-
-    q2 = np.zeros(imagem_dividida[1].shape)
-    q2 = montar_imagem(subq2, q2)
-
-    q3 = np.zeros(imagem_dividida[2].shape)
-    q3 = montar_imagem(subq3, q3)
-
-    q4 = np.zeros(imagem_dividida[3].shape)
-    q4 = montar_imagem(subq4, q4)
 
     #imagem_ruidosa = montar_imagem([q1, q2, q3, q4], imagem_ruidosa)
     imagem_ruidosa[:int(linha / 2), :int(coluna / 2)] = add_ruido_gaussiano(imagem_original[:int(linha / 2), :int(coluna / 2)], 0.00)  # QUADRANTE 1
@@ -98,7 +66,7 @@ for nome_imagem in lista_imagens_originais:
     imagem_ruidosa = img_as_ubyte(imagem_ruidosa)
     imsave(dir_imagens_ruido_gaussiano + '/' + nome_imagem, imagem_ruidosa)
 
-    print(dir_imagens_ruido_gaussiano +'/'+ nome_imagem)
+    #print(dir_imagens_ruido_gaussiano +'/'+ nome_imagem)
 
 
 print('FIM ADD RUIDO GAUSSIANO')

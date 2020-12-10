@@ -30,8 +30,8 @@ linha, coluna = imagem_ruido.shape
 
 q1_ruido = imagem_ruido[:int(linha / 2), :int(coluna / 2)]
 q2_ruido = imagem_ruido[:int(linha / 2), int(coluna / 2):]
-q3_ruido = imagem_ruido[int(linha / 2):, :int(coluna / 2)]
-q4_ruido = imagem_ruido[int(linha / 2):, int(coluna / 2):]
+q3_ruido = imagem_ruido[int(linha / 2):, int(coluna / 2):]
+q4_ruido = imagem_ruido[int(linha / 2):, :int(coluna / 2)]
 
 #############FIM SEPARA QUADRANTES#############
 
@@ -46,8 +46,8 @@ for porcentagem_corte in lista_porcentagem_corte:
     imagem_filtrada = np.zeros(imagem_ruido.shape)
     imagem_filtrada[:int(linha / 2), :int(coluna / 2)] = q1_filtro
     imagem_filtrada[:int(linha / 2), int(coluna / 2):] = q2_filtro
-    imagem_filtrada[int(linha / 2):, :int(coluna / 2)] = q3_filtro
-    imagem_filtrada[int(linha / 2):, int(coluna / 2):] = q4_filtro
+    imagem_filtrada[int(linha / 2):, int(coluna / 2):] = q3_filtro
+    imagem_filtrada[int(linha / 2):, :int(coluna / 2)] = q4_filtro
 
     imagem_filtrada = img_as_ubyte(imagem_filtrada)
 

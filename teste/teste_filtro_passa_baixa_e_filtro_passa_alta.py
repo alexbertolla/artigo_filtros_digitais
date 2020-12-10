@@ -60,8 +60,8 @@ linha, coluna = imagem_original.shape
 
 quadrante_1 = imagem_original[:int(linha / 2), :int(coluna / 2)]
 quadrante_2 = imagem_original[:int(linha / 2), int(coluna / 2):]
-quadrante_3 = imagem_original[int(linha / 2):, :int(coluna / 2)]
-quadrante_4 = imagem_original[int(linha / 2):, int(coluna / 2):]
+quadrante_3 = imagem_original[int(linha / 2):, int(coluna / 2):]
+quadrante_4 = imagem_original[int(linha / 2):, :int(coluna / 2)]
 
 
 quadrante_ruido_1 = add_ruido_gaussiano(quadrante_1, 0.00)
@@ -72,8 +72,8 @@ quadrante_ruido_4 = add_ruido_gaussiano(quadrante_4, 0.15)
 imagem_ruido_gaussiano = np.zeros(imagem_original.shape)
 imagem_ruido_gaussiano[:int(linha / 2), :int(coluna / 2)] = quadrante_ruido_1
 imagem_ruido_gaussiano[:int(linha / 2), int(coluna / 2):] = quadrante_ruido_2
-imagem_ruido_gaussiano[int(linha / 2):, :int(coluna / 2)] = quadrante_ruido_3
-imagem_ruido_gaussiano[int(linha / 2):, int(coluna / 2):] = quadrante_ruido_4
+imagem_ruido_gaussiano[int(linha / 2):, int(coluna / 2):] = quadrante_ruido_3
+imagem_ruido_gaussiano[int(linha / 2):, :int(coluna / 2)] = quadrante_ruido_4
 
 imagem_pb_5 = np.zeros(imagem_original.shape)
 imagem_pb_7 = np.zeros(imagem_original.shape)
@@ -83,28 +83,28 @@ imagem_pb_15 = np.zeros(imagem_original.shape)
 
 imagem_pb_5[:int(linha / 2), :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_1, 0.05)
 imagem_pb_5[:int(linha / 2), int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_2, 0.05)
-imagem_pb_5[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_3, 0.05)
-imagem_pb_5[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_4, 0.05)
+imagem_pb_5[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_3, 0.05)
+imagem_pb_5[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_4, 0.05)
 
 imagem_pb_7[:int(linha / 2), :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_1, 0.07)
 imagem_pb_7[:int(linha / 2), int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_2, 0.07)
-imagem_pb_7[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_3, 0.07)
-imagem_pb_7[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_4, 0.07)
+imagem_pb_7[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_3, 0.07)
+imagem_pb_7[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_4, 0.07)
 
 imagem_pb_10[:int(linha / 2), :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_1, 0.10)
 imagem_pb_10[:int(linha / 2), int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_2, 0.10)
-imagem_pb_10[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_3, 0.10)
-imagem_pb_10[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_4, 0.10)
+imagem_pb_10[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_3, 0.10)
+imagem_pb_10[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_4, 0.10)
 
 imagem_pb_13[:int(linha / 2), :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_1, 0.13)
 imagem_pb_13[:int(linha / 2), int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_2, 0.13)
-imagem_pb_13[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_3, 0.13)
-imagem_pb_13[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_4, 0.13)
+imagem_pb_13[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_3, 0.13)
+imagem_pb_13[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_4, 0.13)
 
 imagem_pb_15[:int(linha / 2), :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_1, 0.15)
 imagem_pb_15[:int(linha / 2), int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_2, 0.15)
-imagem_pb_15[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_3, 0.15)
-imagem_pb_15[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_4, 0.15)
+imagem_pb_15[int(linha / 2):, int(coluna / 2):] = filtro_passa_baixa(quadrante_ruido_3, 0.15)
+imagem_pb_15[int(linha / 2):, :int(coluna / 2)] = filtro_passa_baixa(quadrante_ruido_4, 0.15)
 
 imagem_pb_5 = img_as_ubyte(imagem_pb_5)
 imagem_pb_7 = img_as_ubyte(imagem_pb_7)
@@ -121,28 +121,28 @@ imagem_pa_15 = np.zeros(imagem_original.shape)
 
 imagem_pa_5[:int(linha / 2), :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_1, 0.005)
 imagem_pa_5[:int(linha / 2), int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_2, 0.005)
-imagem_pa_5[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_3, 0.005)
-imagem_pa_5[int(linha / 2):, int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_4, 0.005)
+imagem_pa_5[int(linha / 2):, int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_3, 0.005)
+imagem_pa_5[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_4, 0.005)
 
 imagem_pa_7[:int(linha / 2), :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_1, 0.01)
 imagem_pa_7[:int(linha / 2), int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_2, 0.01)
-imagem_pa_7[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_3, 0.01)
-imagem_pa_7[int(linha / 2):, int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_4, 0.01)
+imagem_pa_7[int(linha / 2):, int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_3, 0.01)
+imagem_pa_7[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_4, 0.01)
 
 imagem_pa_10[:int(linha / 2), :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_1, 0.015)
 imagem_pa_10[:int(linha / 2), int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_2, 0.015)
-imagem_pa_10[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_3, 0.015)
-imagem_pa_10[int(linha / 2):, int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_4, 0.015)
+imagem_pa_10[int(linha / 2):, int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_3, 0.015)
+imagem_pa_10[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_4, 0.015)
 
 imagem_pa_13[:int(linha / 2), :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_1, 0.02)
 imagem_pa_13[:int(linha / 2), int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_2, 0.02)
-imagem_pa_13[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_3, 0.02)
-imagem_pa_13[int(linha / 2):, int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_4, 0.02)
+imagem_pa_13[int(linha / 2):, int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_3, 0.02)
+imagem_pa_13[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_4, 0.02)
 
 imagem_pa_15[:int(linha / 2), :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_1, 0.025)
 imagem_pa_15[:int(linha / 2), int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_2, 0.025)
-imagem_pa_15[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_3, 0.025)
 imagem_pa_15[int(linha / 2):, int(coluna / 2):] = filtro_passa_alta(quadrante_ruido_4, 0.025)
+imagem_pa_15[int(linha / 2):, :int(coluna / 2)] = filtro_passa_alta(quadrante_ruido_3, 0.025)
 
 imagem_pa_5 = img_as_ubyte(imagem_pa_5)
 imagem_pa_7 = img_as_ubyte(imagem_pa_7)

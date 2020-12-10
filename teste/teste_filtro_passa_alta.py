@@ -35,13 +35,15 @@ imagem_ruido = img_as_float(imread(caminho_imagem_ruidosa, as_gray=True))
 linha, coluna = imagem_original.shape
 q1 = imagem_original[:int(linha / 2), :int(coluna / 2)]
 q2 = imagem_original[:int(linha / 2), int(coluna / 2):]
-q3 = imagem_original[int(linha / 2):, :int(coluna / 2)]
-q4 = imagem_original[int(linha / 2):, int(coluna / 2):]
+q3 = imagem_original[int(linha / 2):, int(coluna / 2):]
+q4 = imagem_original[int(linha / 2):, :int(coluna / 2)]
+
 
 q1_ruido = imagem_ruido[:int(linha / 2), :int(coluna / 2)]
 q2_ruido = imagem_ruido[:int(linha / 2), int(coluna / 2):]
-q3_ruido = imagem_ruido[int(linha / 2):, :int(coluna / 2)]
-q4_ruido = imagem_ruido[int(linha / 2):, int(coluna / 2):]
+q3_ruido = imagem_ruido[int(linha / 2):, int(coluna / 2):]
+q4_ruido = imagem_ruido[int(linha / 2):, :int(coluna / 2)]
+
 #############FIM SEPARA QUADRANTES#############
 
 espectro_original = gerar_espectro(imagem_original)
@@ -52,8 +54,9 @@ q4_espectro = gerar_espectro(q4)
 espectros_originais = np.zeros((imagem_original.shape))
 espectros_originais[:int(linha / 2), :int(coluna / 2)] = q1_espectro
 espectros_originais[:int(linha / 2), int(coluna / 2):] = q2_espectro
-espectros_originais[int(linha / 2):, :int(coluna / 2)] = q3_espectro
-espectros_originais[int(linha / 2):, int(coluna / 2):] = q4_espectro
+espectros_originais[int(linha / 2):, int(coluna / 2):] = q3_espectro
+espectros_originais[int(linha / 2):, :int(coluna / 2)] = q4_espectro
+
 
 espectro_ruido = gerar_espectro(imagem_ruido)
 q1_espectro_ruido = gerar_espectro(q1_ruido)
@@ -63,8 +66,9 @@ q4_espectro_ruido = gerar_espectro(q4_ruido)
 espectros_ruidos = np.zeros((imagem_ruido.shape))
 espectros_ruidos[:int(linha / 2), :int(coluna / 2)] = q1_espectro_ruido
 espectros_ruidos[:int(linha / 2), int(coluna / 2):] = q2_espectro_ruido
-espectros_ruidos[int(linha / 2):, :int(coluna / 2)] = q3_espectro_ruido
-espectros_ruidos[int(linha / 2):, int(coluna / 2):] = q4_espectro_ruido
+espectros_ruidos[int(linha / 2):, int(coluna / 2):] = q3_espectro_ruido
+espectros_ruidos[int(linha / 2):, :int(coluna / 2)] = q4_espectro_ruido
+
 
 pltL = 3
 pltC = 8
@@ -121,14 +125,15 @@ for corte in lista_porcentagem_corte:
     imagem_filtrada = np.zeros(imagem_original.shape)
     imagem_filtrada[:int(linha / 2), :int(coluna / 2)] = q1_filtro
     imagem_filtrada[:int(linha / 2), int(coluna / 2):] = q2_filtro
-    imagem_filtrada[int(linha / 2):, :int(coluna / 2)] = q3_filtro
-    imagem_filtrada[int(linha / 2):, int(coluna / 2):] = q4_filtro
+    imagem_filtrada[int(linha / 2):, int(coluna / 2):] = q3_filtro
+    imagem_filtrada[int(linha / 2):, :int(coluna / 2)] = q4_filtro
 
     espectro_filtro = np.zeros(imagem_filtrada.shape)
     espectro_filtro[:int(linha / 2), :int(coluna / 2)] = espectro_filtro_q1
     espectro_filtro[:int(linha / 2), int(coluna / 2):] = espectro_filtro_q2
-    espectro_filtro[int(linha / 2):, :int(coluna / 2)] = espectro_filtro_q3
+
     espectro_filtro[int(linha / 2):, int(coluna / 2):] = espectro_filtro_q4
+    espectro_filtro[int(linha / 2):, :int(coluna / 2)] = espectro_filtro_q3
 
     print(np.min(imagem_filtrada))
     print()
