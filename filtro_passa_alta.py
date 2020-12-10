@@ -17,7 +17,7 @@ def filtro_passa_alta(imagem, porcentagem_corte):
     half_w, half_h = int(w / 2), int(h / 2)
     fcorte = int(half_w * porcentagem_corte)
     sfreq[half_w - fcorte:half_w + fcorte + 1, half_h - fcorte:half_h + fcorte + 1] = 0
-    imagem_passa_alta = fp.ifft2(fp.ifftshift(sfreq)).real
+    imagem_passa_alta = np.clip(fp.ifft2(fp.ifftshift(sfreq)).real, 0, 1)
     return imagem_passa_alta
 
 
@@ -46,12 +46,15 @@ for porcentagem_corte in lista_porcentagem_corte:
 
         #############SEPARA QUADRANTES#############
         linha, coluna = imagem_ruido.shape
-        q1_ruido = imagem_ruido[:int(linha / 2), :int(coluna / 2)]
-        q2_ruido = imagem_ruido[:int(linha / 2), int(coluna / 2):]
-        q3_ruido = imagem_ruido[int(linha / 2):, :int(coluna / 2)]
-        q4_ruido = imagem_ruido[int(linha / 2):, int(coluna / 2):]
-        #############FIM SEPARA QUADRANTES#############
+        q1_ruido = imagem_ruido[:int(linha / 2), :int(coluna / 2)]  # QUADRANTE 1
+        q2_ruido = imagem_ruido[:int(linha / 2), int(coluna / 2):]  # QUADRANTE 2
+        q3_ruido = imagem_ruido[int(linha / 2):, int(coluna / 2):]  # QUADRANTE 3
+        q4_ruido = imagem_ruido[int(linha / 2):, :int(coluna / 2)]  # QUADRANTE 4
 
+
+
+
+        #############FIM SEPARA QUADRANTES#############
 
         q1_filtro = filtro_passa_alta(q1_ruido, porcentagem_corte)
         q2_filtro = filtro_passa_alta(q2_ruido, porcentagem_corte)
@@ -59,10 +62,11 @@ for porcentagem_corte in lista_porcentagem_corte:
         q4_filtro = filtro_passa_alta(q4_ruido, porcentagem_corte)
 
         imagem_filtrada = np.zeros(imagem_ruido.shape)
-        imagem_filtrada[:int(linha / 2), :int(coluna / 2)] = q1_filtro
-        imagem_filtrada[:int(linha / 2), int(coluna / 2):] = q2_filtro
-        imagem_filtrada[int(linha / 2):, :int(coluna / 2)] = q3_filtro
-        imagem_filtrada[int(linha / 2):, int(coluna / 2):] = q4_filtro
+        imagem_filtrada[:int(linha / 2), :int(coluna / 2)] = q1_filtro  # QUADRANTE 1
+        imagem_filtrada[:int(linha / 2), int(coluna / 2):] = q2_filtro  # QUADRANTE 2
+        imagem_filtrada[int(linha / 2):, int(coluna / 2):] = q3_filtro  # QUADRANTE 3
+        imagem_filtrada[int(linha / 2):, :int(coluna / 2)] = q4_filtro  # QUADRANTE 4
+
 
         imagem_filtrada = img_as_ubyte(imagem_filtrada)
         imsave(dir_imagens_filtro_passa_alta + str(porcentagem_corte) + '/' + nome_imagem, imagem_filtrada)

@@ -2,9 +2,8 @@ import numpy as np
 from skimage.io import imread
 from skimage.metrics import mean_squared_error as mse
 from skimage.metrics import peak_signal_noise_ratio as psnr
-
 import os
-
+import shutil
 import codecs
 
 def calcular_mse(img1, img2):
@@ -27,6 +26,11 @@ caminho_imagem_ruidosa = './imagens_ruido_gaussiano/'
 lista_caminho_imagem_filtrada = (['./imagens_filtro_passa_alta/', '_alta_'], ['./imagens_filtro_passa_baixa/', '_baixa_'])
 
 dir_metricas = './metricas/'
+shutil.rmtree(dir_metricas, ignore_errors=True)
+os.mkdir(dir_metricas)
+os.mkdir(dir_metricas + 'mse')
+os.mkdir(dir_metricas + 'psnr')
+
 
 for caminho_imagem_filtrada in lista_caminho_imagem_filtrada:
 
@@ -49,24 +53,30 @@ for caminho_imagem_filtrada in lista_caminho_imagem_filtrada:
             # ABRIR IMAGENS RUIDOSAS
             imagem_ruidosa = imread(caminho_imagem_ruidosa + nome_imagem)
             linha, coluna = imagem_ruidosa.shape
-            q1_ruidoso = imagem_ruidosa[:int(linha / 2), :int(coluna / 2)]
-            q2_ruidoso = imagem_ruidosa[:int(linha / 2), int(coluna / 2):]
-            q3_ruidoso = imagem_ruidosa[int(linha / 2), :int(coluna / 2)]
-            q4_ruidoso = imagem_ruidosa[int(linha / 2), int(coluna / 2):]
+            q1_ruidoso = imagem_ruidosa[:int(linha / 2), :int(coluna / 2)]  # QUADRANTE 1
+            q2_ruidoso = imagem_ruidosa[:int(linha / 2), int(coluna / 2):]  # QUADRANTE 2
+            q3_ruidoso = imagem_ruidosa[int(linha / 2):, int(coluna / 2):]  # QUADRANTE 3
+            q4_ruidoso = imagem_ruidosa[int(linha / 2):, :int(coluna / 2)]  # QUADRANTE 4
+
+
+
 
             #ABRIR IMAGENS FILTRADAS
             imagem_filtrada = imread(dir_imagem_filtrada + '/' + str(porncetagem_corte) + '/' + nome_imagem)
-            q1_filtrado = imagem_filtrada[:int(linha / 2), :int(coluna / 2)]
-            q2_filtrado = imagem_filtrada[:int(linha / 2), int(coluna / 2):]
-            q3_filtrado = imagem_filtrada[int(linha / 2), :int(coluna / 2)]
-            q4_filtrado = imagem_filtrada[int(linha / 2), int(coluna / 2):]
+            q1_filtrado = imagem_filtrada[:int(linha / 2), :int(coluna / 2)]  # QUADRANTE 1
+            q2_filtrado = imagem_filtrada[:int(linha / 2), int(coluna / 2):]  # QUADRANTE 2
+            q3_filtrado = imagem_filtrada[int(linha / 2):, int(coluna / 2):]  # QUADRANTE 3
+            q4_filtrado = imagem_filtrada[int(linha / 2):, :int(coluna / 2)]  # QUADRANTE 4
+
+
 
             # ABRIR IMAGENS ORIGINAIS
             imagem_original = imread(caminho_imagem_original + '/' + nome_imagem)
-            q1_original = imagem_original[:int(linha / 2), :int(coluna / 2)]
-            q2_original = imagem_original[:int(linha / 2), int(coluna / 2):]
-            q3_original = imagem_original[int(linha / 2), :int(coluna / 2)]
-            q4_original = imagem_original[int(linha / 2), int(coluna / 2):]
+            q1_original = imagem_original[:int(linha / 2), :int(coluna / 2)]  # QUADRANTE 1
+            q2_original = imagem_original[:int(linha / 2), int(coluna / 2):]  # QUADRANTE 2
+            q3_original = imagem_original[int(linha / 2):, int(coluna / 2):]  # QUADRANTE 3
+            q4_original = imagem_original[int(linha / 2):, :int(coluna / 2)]  # QUADRANTE 4
+
 
             #CALCULAR MSE
             q1_mse = calcular_mse(q1_original, q1_filtrado)
@@ -86,8 +96,7 @@ for caminho_imagem_filtrada in lista_caminho_imagem_filtrada:
 
             linha_arquivo_psnr += nome_imagem + ';' + str(q1_psnr) + ';' + str(q2_psnr) + ';' + str(q3_psnr) + ';' + str(q4_psnr)
             linha_arquivo_psnr += '\n'
-
-        salvar_arquivo(dir_metricas, nome_arquivo_mse, linha_arquivo_mse)
-        salvar_arquivo(dir_metricas, nome_arquivo_psnr, linha_arquivo_psnr)
+        salvar_arquivo(dir_metricas + 'mse/', nome_arquivo_mse, linha_arquivo_mse)
+        salvar_arquivo(dir_metricas + 'psnr/', nome_arquivo_psnr, linha_arquivo_psnr)
 
 print('FIM CALCULAR MÉTRICAS MSE & PSNR')
