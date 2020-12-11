@@ -21,12 +21,28 @@ def filtro_passa_alta(imagem, porcentagem_corte):
     sfreq[half_w - fcorte:half_w + fcorte + 1, half_h - fcorte:half_h + fcorte + 1] = 0
 
     imagem_passa_alta = np.clip(fp.ifft2(fp.ifftshift(sfreq)).real, 0, 1)
-    espectro_filtro = (20 * np.log10(0.1 + sfreq)).real
+    #sfreq[half_w - fcorte:half_w + fcorte + 1, half_h - fcorte:half_h + fcorte + 1] = -255
+    #espectro_filtro = np.clip((20 * np.log10(0.1 + sfreq)).real, 0, 255)
 
-    return imagem_passa_alta, espectro_filtro
+    lfrq = np.copy(sfreq)
+    sfreq[half_w - fcorte:half_w + fcorte + 1, half_h - fcorte:half_h + fcorte + 1] = -1
+    lfrq -= sfreq
+    espectro_filtro = (20 * np.log10(0.1 + lfrq)).real
 
-caminho_imagem = '../banco_imagens/sf_5507028-PPT.jpg'
-caminho_imagem_ruidosa = '../imagens_ruido_gaussiano/sf_5507028-PPT.jpg'
+    espectro_hf = np.ones(espectro_filtro.shape)
+    espectro_hf -= espectro_filtro
+    #espectro_hf = abs(espectro_hf)
+
+    #print(abs(espectro_hf))
+    #pylab.imshow(espectro_hf, cmap='gray'), pylab.show()
+
+
+    #exit()
+
+    return imagem_passa_alta, espectro_hf
+
+caminho_imagem = '../banco_imagens/hz_1235134-PPT.jpg'
+caminho_imagem_ruidosa = '../imagens_ruido_gaussiano/hz_1235134-PPT.jpg'
 
 imagem_original = img_as_float(imread(caminho_imagem, as_gray=True))
 imagem_ruido = img_as_float(imread(caminho_imagem_ruidosa, as_gray=True))
@@ -102,13 +118,13 @@ pylab.imshow(espectros_originais, cmap='gray')
 pltPF += 1
 
 pylab.subplot(pltL, pltC, pltPSI)
-pylab.axis('off')
+pylab.axis('on')
 #pylab.title('Ruído')
 pylab.imshow(espectro_ruido, cmap='gray')
 pltPSI += 1
 
 pylab.subplot(pltL, pltC, pltPF)
-pylab.axis('off')
+pylab.axis('on')
 #pylab.title('Espectros Quadrantes Ruídos')
 pylab.imshow(espectros_ruidos, cmap='gray')
 pltPF += 1
@@ -135,10 +151,11 @@ for corte in lista_porcentagem_corte:
     espectro_filtro[int(linha / 2):, int(coluna / 2):] = espectro_filtro_q4
     espectro_filtro[int(linha / 2):, :int(coluna / 2)] = espectro_filtro_q3
 
-    print(np.min(imagem_filtrada))
+    #print(np.min(imagem_filtrada))
     print()
     imagem_filtrada = img_as_ubyte(abs(imagem_filtrada))
-    print(imagem_filtrada)
+    #print(imagem_filtrada)
+
 
     pylab.subplot(pltL, pltC, pltPI)
     pylab.axis('off')
@@ -147,16 +164,17 @@ for corte in lista_porcentagem_corte:
     pltPI += 1
 
     pylab.subplot(pltL, pltC, pltPSI)
-    pylab.axis('off')
+    pylab.axis('on')
     # pylab.title('Ruído')
     pylab.imshow(espectro_pa, cmap='gray')
     pltPSI += 1
 
     pylab.subplot(pltL, pltC, pltPF)
-    pylab.axis('off')
+    pylab.axis('on')
     # pylab.title('Espectros Quadrantes Ruídos')
     pylab.imshow(espectro_filtro, cmap='gray')
     pltPF += 1
+
     #exit()
 
     #cv.imshow('imagem ' + str(corte), imagem_filtrada)
